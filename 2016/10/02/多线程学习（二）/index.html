@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Cydeer">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="多线程学习（二）"/>
+  <meta property="og:description" content="不同的生活， 带来不同的际遇， 福祸好歹， 终会积累成经历的一种， 脚步匆匆， 只是不知下一站会在哪里... 一切只是开始，一切也终将继续" />
+  <meta property="og:site_name" content="下个路口见"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://www.merlin4io.comundefined"/>
+  
+    <link rel="alternate" href="/atom.xml" title="下个路口见" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>下个路口见</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">多线程学习（二）</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/<your-github-username>">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:<your-email-address>">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By Cydeer</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">10月 2 2016</span>
+            <span class="time">20:27:07</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/synchronized/">#synchronized</a> <a class="tag" href="/tags/volatile/">#volatile</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h2 id="共享变量的并发访问"><a href="#共享变量的并发访问" class="headerlink" title="共享变量的并发访问"></a>共享变量的并发访问</h2><h3 id="synchronized同步方法"><a href="#synchronized同步方法" class="headerlink" title="synchronized同步方法"></a>synchronized同步方法</h3><ul>
+<li>方法内部的变量为线程安全变量</li>
+<li>实例变量为非线程安全变量</li>
+</ul>
+<p>同一个类的synchronized同步方法的锁事对象锁，是当前对象实例。</p>
+<p>类A中有synchronized方法methodA（）和 非同步方法methodB(),则一个线程调用类A实例a的methodA()的同时，其他线程可以调用非同步方法methodB（）。多个线程多个类A的实例a,b,c,则多个线程可以异步调用a.methodA(),b.methodA(),c.methodA(),但同时只能有一个线程调用a.methodA(),因为synchronized方法为对象锁，不同的对象不同的锁。<br><a id="more"></a><br>类A中有synchronized方法methodA(),和synchronized方法methodB（），则在一个线程访问a的methodA（）的时候，其他线程不能访问methodB（），只能等到调用methodA（）的线程执行完或者放弃锁。</p>
+<p>对共享的可变变量不进行同步操作，会导致数据的不一致，脏读。</p>
+<p>synchronized方法具有重入锁功能，同样的类A中有synchronized方法methodA(),和synchronized方法methodB（），一个线程在执行methodA（）的时候，其他线程不能执行methodB（）方法，但在该线程可以在methodA（）调用methdodB（）方法。冲入锁，主要解决继承问题，比如说父类有一个synchronized methodC()方法，子类中重写了父类的methodC()方法，并且自类中调用了super.methodC()，并且也是synchronized方法，则如果没有重入锁，就永远获取不能执行父类的方法。</p>
+<p>synchronized方法不具有继承性，父类方法为synchronized方法，子类没有生命为synchronized则自类方法不会同步。</p>
+<h3 id="synchronized同步语句块"><a href="#synchronized同步语句块" class="headerlink" title="synchronized同步语句块"></a>synchronized同步语句块</h3><p>同步方法会导致一些无关的操作也会进入等待锁，另外同步方法同步的范围比较大，而同步语句块则可以更精确的控制需要同步操作的位置，提高效率。<br>synchronized（this）的锁同样是对象锁。所以改代码块可所有synchronized方法是同步的。同一时刻只能有一个线程能够访问这些同步块（方法）中的其中一块（方法）。</p>
+<p>synchronized（x）的锁为x，则x对应的同步方法用的是同一把锁，所以同时只能有一个线程访问这些同步代码块。</p>
+<h3 id="静态同步方法，静态同步语句块"><a href="#静态同步方法，静态同步语句块" class="headerlink" title="静态同步方法，静态同步语句块"></a>静态同步方法，静态同步语句块</h3><p>静态同步方法，和静态同步语句块的锁为class文件，所以和对象锁不互斥，可以异步访问。</p>
+<h3 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h3><p>有两块共享资源 ，A，B，获取共享资源A需要先获得lock1，再获得lock2，获取共享资源B需要先获得lock2，然后获得lock1。有两个线程，thread1 先拿到lock1，thread2拿到lock2，thread1去获取lock2，拿不到锁，thread2去拿lock1，拿不到锁，导致一直不能往下运行，导致死锁。</p>
+<h3 id="锁改变"><a href="#锁改变" class="headerlink" title="锁改变"></a>锁改变</h3><p>sychronized(x),<br>当作锁的对象(x)一般是不变的。如果用String当做锁，比如一开始用”123”当做锁，如果A线程获取到锁之后，把该字符串改为”234”,则如果B线程在检查锁的时候如果实在修改字符串之前，会获取不到锁，会等待锁，但是如果在修改之后去获取锁，就能够获取到锁，就会起不到同步的作用。<br>但是如果x是一个对象，x中的某个属性改变不会影响锁。</p>
+<h3 id="volatile"><a href="#volatile" class="headerlink" title="volatile"></a>volatile</h3><ul>
+<li>volatile主要解决的是多个线程之间的可见性，synchronized主要解决的事多个线程之间访问资源的同步性。</li>
+<li>volatile是线程同步的轻量级实现，比synchronized性能要好，不过volatile只能修饰变量，synchronized可以修饰方法和代码块，随着jdk的升级，synchronized的性能也在提高。</li>
+<li>volatile只能保证可见性，不能保证原子性。而synchronized可以保证原子性，也可以间接保证可见性。</li>
+<li>多线程访问volatile变量是非阻塞的，而synchronized会出现阻塞。</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

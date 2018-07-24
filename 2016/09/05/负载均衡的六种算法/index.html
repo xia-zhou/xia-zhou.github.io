@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Cydeer">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="负载均衡的六种算法"/>
+  <meta property="og:description" content="不同的生活， 带来不同的际遇， 福祸好歹， 终会积累成经历的一种， 脚步匆匆， 只是不知下一站会在哪里... 一切只是开始，一切也终将继续" />
+  <meta property="og:site_name" content="下个路口见"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://www.merlin4io.comundefined"/>
+  
+    <link rel="alternate" href="/atom.xml" title="下个路口见" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>下个路口见</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">负载均衡的六种算法</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/<your-github-username>">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:<your-email-address>">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By Cydeer</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">9月 5 2016</span>
+            <span class="time">20:27:07</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/负载算法/">#负载算法</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>负载均衡常用算法有：轮询，加权轮训，随机，加权随机，源地址hash，最小连接数。    </p>
+<h3 id="轮询、加权轮询"><a href="#轮询、加权轮询" class="headerlink" title="轮询、加权轮询"></a>轮询、加权轮询</h3><p>轮询法是多个服务器轮流处理请求，加权轮询，根据服务器的权重轮流处理请求，权重越大处理请求的次数越多。<br>服务器列表：</p>
+<pre><code> static Map&lt;String,Integer&gt; serverWeigthMap  = new HashMap&lt;String,Integer&gt;();
+
+ static{
+    serverWeigthMap.put(&quot;192.168.1.12&quot;, 1);
+    serverWeigthMap.put(&quot;192.168.1.13&quot;, 1);
+    serverWeigthMap.put(&quot;192.168.1.14&quot;, 2);
+    serverWeigthMap.put(&quot;192.168.1.15&quot;, 2);
+    serverWeigthMap.put(&quot;192.168.1.16&quot;, 3);
+    serverWeigthMap.put(&quot;192.168.1.17&quot;, 3);
+    serverWeigthMap.put(&quot;192.168.1.18&quot;, 1);
+    serverWeigthMap.put(&quot;192.168.1.19&quot;, 2);
+}
+</code></pre><p>轮询法：</p>
+<pre><code>把所有的服务器ip放到一个list里面，每次记录下次处理请求的机器编号，下次请求来的时候，直接拿ip，然后操作pos。
+</code></pre><p>加权轮询法：</p>
+<pre><code>把ip放到list里面，权重是多少，就放多少个同样的ip进去，其他的和轮询法一样
+</code></pre><h3 id="随机、加权随机"><a href="#随机、加权随机" class="headerlink" title="随机、加权随机"></a>随机、加权随机</h3><p>随机法是多个服务器随机处理请求，每来一个请求，随机获取一台服务器处理请求，加权随机，会使得权重大的更有可能随机到，当请求数量达到一定程度，随机和轮询效果一样，加权轮询和加权随机效果一样。</p>
+<p>随机法：</p>
+<pre><code>把ip放到list里面，每次随机一个0到list.size()的数，当作服务器序号，直接根据序号获取服务器地址
+</code></pre><p>加权随机法：</p>
+<pre><code>把ip放到list中，权重是多少，放多少次，然后和随机法一样。
+</code></pre><h3 id="源地址hash"><a href="#源地址hash" class="headerlink" title="源地址hash"></a>源地址hash</h3><p>对客户端的地址进行hash运算，然后对服务器总数取模，得到的结果就是服务器的序号，源地址hash作为负载算法，统一ip客户端，当后端的服务器列表顺序不变，它每次都会映射到同一台后端服务器访问。这样如果后端服务器不变，可以保持客户端和服务端的session会话。</p>
+<h3 id="最小连接数"><a href="#最小连接数" class="headerlink" title="最小连接数"></a>最小连接数</h3><p>最小连接数法比较灵活和智能是最接近真实情况，最合理的负载算法。它根据后端服务器的当前连接情况，动态的选择其中当前连接数最小的一台服务器来处理请求。尽可能的提高后端服务器的利用率，将负载合理的分流到每一台服务器。</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

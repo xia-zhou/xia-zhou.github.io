@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Cydeer">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="ThreadLocal初体验"/>
+  <meta property="og:description" content="不同的生活， 带来不同的际遇， 福祸好歹， 终会积累成经历的一种， 脚步匆匆， 只是不知下一站会在哪里... 一切只是开始，一切也终将继续" />
+  <meta property="og:site_name" content="下个路口见"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://www.merlin4io.comundefined"/>
+  
+    <link rel="alternate" href="/atom.xml" title="下个路口见" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>下个路口见</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">ThreadLocal初体验</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/<your-github-username>">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:<your-email-address>">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By Cydeer</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">8月 23 2016</span>
+            <span class="time">20:27:07</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/Java/">#Java</a> <a class="tag" href="/tags/ThreadLocal/">#ThreadLocal</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <p>网络上有很多关于ThreadLocal的介绍，有很多介绍使用场景，使用方法，以及源码的文章。这里只是简单的介绍一下。</p>
+<h3 id="ThreadLocal的定义"><a href="#ThreadLocal的定义" class="headerlink" title="ThreadLocal的定义"></a>ThreadLocal的定义</h3><p>ThreadLocal为变量在每个线程中都创建一个副本，所以每个线程只能访问自己内部的副本变量。在自己的线程内部共享，不同线程之间不会互相干扰。ThreadLocal是为了保证线程范围内的共享数据而生。<br>ThreadLocal提供了一种访问某个变量的特殊方式：访问到的变量属于当前线程，即保证每个线程的变量不一样，而同一个线程在任何地方都可以拿到这个线程变量，这就是所谓的线程隔离。<br>如果要使用ThreadLocal，通常定义为private static类型，最好是定义为private static final类型。<br><a id="more"></a></p>
+<h3 id="ThreaLocal使用场景"><a href="#ThreaLocal使用场景" class="headerlink" title="ThreaLocal使用场景"></a>ThreaLocal使用场景</h3><p>什么样的场景下适合使用ThreadLocal？<br>ThreadLocal通常用来共享数据，当你想在多个方法中使用某个变量，这个变量是当前线程的状态，其它线程不依赖这个变量，你第一时间想到的就是把变量定义在方法内部，然后再方法之间传递参数来使用，这个方法能解决问题，但是有个烦人的地方就是，每个方法都需要声明形参，多处声明，多处调用。影响代码的美观和维护。有没有一种方法能将变量像private static形式来访问呢？这样在类的任何一处地方就都能使用。这个时候ThreadLocal大显身手了。</p>
+<p>另一方面ThreadLocal做线程隔离，线程之间不共享的数据可以放倒ThreadLocal里面去。</p>
+<h3 id="使用ThreadLocal要注意哪些问题？"><a href="#使用ThreadLocal要注意哪些问题？" class="headerlink" title="使用ThreadLocal要注意哪些问题？"></a>使用ThreadLocal要注意哪些问题？</h3><p>自己声明的线程变量，使用完之后一定要清理，处理好战场，如果每次都是新建一个线程，是可以不清理，但是一般情况下都会使用线程池，使用了线程池，就要保证自己拿到线程的时候，线程变量要初始化，也就是清除原先使用该线程的地方没有清理战场，导致自己的程序异常执行，自己使用完之后要自觉的清理战场。如果是一个比较大的模块使用线程变量，比如过，牵扯到N多个类，都会使用到，那么最好是写一个线程变量的管理类（类似上下文的概念），每个使用的地方都去上下文环境中去拿就行了，或者往上下文环境中存数据就可以了。具体怎么使用，怎么初始化，最终怎么清理，使用的地方可以不关注，全局控制的地方，也就是入口和出口会控制这些东西，另外清理动作一定要放在finanly里面去执行，线程内出现任何异常都要去处理战场，处理完之后可以把异常继续抛出去。</p>
+<p>或许有人会问单线程适不适合使用呢？</p>
+<p>在我看来，这没有什么区别，想再线程内部共享数据和多线程没有关系，只要处理好线程内部的战场就好了。</p>
+<p>具体的使用方式，方法这里就不罗列代码了，不过可以有几个相关的类可以做参考</p>
+<p>如下代码：</p>
+<pre><code>package com.cydeer.demo.settle;
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by zhangsong on 16/8/15.
+ * 线程变量全局管理类
+ */
+public class SettleContext {
+
+    /**
+     * 结算信息列表
+     */
+    private static ThreadLocal&lt;List&lt;object&gt;&gt; stmtInfos = new ThreadLocal&lt;&gt;();
+
+
+    /**
+     * 结算过程信息列表
+     */
+    private static ThreadLocal&lt;List&lt;object&gt;&gt; formulaInfos = new ThreadLocal&lt;&gt;();
+
+
+    /**
+     * 添加 结算主体信息
+     *
+     * @param stmtInfo
+     */
+    public static void addStmtInfo(Object stmtInfo) {
+        if (stmtInfo == null) {
+            return;
+        }
+        List&lt;Object&gt; stmtInfoList = stmtInfos.get();
+        if (stmtInfoList == null) {
+            stmtInfoList = new ArrayList&lt;&gt;();
+            stmtInfos.set(stmtInfoList);
+        }
+        stmtInfoList.add(stmtInfo);
+    }
+
+    /**
+     * 获取 结算主体信息
+     *
+     * @return
+     */
+    public static List&lt;Object&gt; getStmtInfo() {
+        return stmtInfos.get();
+    }
+
+    /**
+     * @param formulaInfo
+     */
+    public static void addSettleFormulaInfo(Object formulaInfo) {
+        if (formulaInfo == null) {
+            return;
+        }
+        List&lt;Object&gt; formulaInfoList = formulaInfos.get();
+        if (formulaInfoList == null) {
+            formulaInfoList = new ArrayList&lt;&gt;();
+            formulaInfos.set(formulaInfoList);
+        }
+        formulaInfoList.add(formulaInfo);
+    }
+
+    /**
+     * 获取 计算过程
+     *
+     * @return
+     */
+    public static List&lt;Object&gt; getSettleFormulaInfo() {
+        return formulaInfos.get();
+    }
+    /**
+     * 清空数据
+     */
+    public static void clear() {
+        stmtInfos.remove();
+        formulaInfos.remove();
+    }
+
+    public static void init() {
+        clear();
+    }
+}
+</code></pre><p>使用的地方只要调用：</p>
+<pre><code>使用之初初始化：
+SettleContext.init();
+存储数据：
+SettleContext.addStmtInfo(object);
+获取数据：
+SettleContext.getStmtInfo();
+使用完之后：
+SettleContext.clear();
+</code></pre><p>代码：</p>
+<pre><code>try {
+        SettleContext.init();
+        System.out.println(&quot;各种执行逻辑封装数据&quot;);
+        transactionTemplate.execute(new TransactionCallback&lt;Boolean&gt;() {
+            @Override public Boolean doInTransaction(TransactionStatus transactionStatus) {
+                System.out.println(&quot;获取数据,对数据持久化,或者再加工&quot;);
+                return Boolean.TRUE;
+            }
+        });
+    } catch (Exception e) {
+        throw e;
+    } finally {
+        SettleContext.clear();
+    }
+</code></pre><p>最后的话：</p>
+<p>一般情况下ThreadLocal不这么用，因为，这样，其他人就能够修改内部具体的内容了，好的使用方法是，存储对应的数据，然后提供接口来获取，只能获取存储数据的人想要提供的数据。</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

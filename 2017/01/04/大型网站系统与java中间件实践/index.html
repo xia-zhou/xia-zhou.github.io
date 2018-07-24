@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Cydeer">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="大型网站系统与java中间件实践"/>
+  <meta property="og:description" content="不同的生活， 带来不同的际遇， 福祸好歹， 终会积累成经历的一种， 脚步匆匆， 只是不知下一站会在哪里... 一切只是开始，一切也终将继续" />
+  <meta property="og:site_name" content="下个路口见"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://www.merlin4io.comundefined"/>
+  
+    <link rel="alternate" href="/atom.xml" title="下个路口见" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>下个路口见</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">大型网站系统与java中间件实践</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/<your-github-username>">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:<your-email-address>">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By Cydeer</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">1月 4 2017</span>
+            <span class="time">20:27:07</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h2 id="什么是分布式系统"><a href="#什么是分布式系统" class="headerlink" title="什么是分布式系统"></a>什么是分布式系统</h2><p>各个组件分布在不同的网络计算机上，组件之间仅仅荣哟消息传递来通信并协调行动。</p>
+<p>大型网站发展：</p>
+<ol>
+<li>单机 ，应用和数据库放在一起。</li>
+<li>单机+缓存，应用和数据库之间添加一层缓存。</li>
+<li>应用和数据库拆分，缓存在应用层。</li>
+<li>数据库读写分离</li>
+<li>应用部署集群，</li>
+<li>分布式缓存，集中缓存</li>
+<li>搜索引擎(lucene,solr)，分布式文件系统。</li>
+<li>应用垂直拆分(分压，解耦)，</li>
+<li>数据库垂直拆分(分压，解耦)</li>
+<li>服务化(解耦去重复)通信rpc</li>
+<li>解耦消息中间件(吞吐量)</li>
+<li>数据库水平拆分，分库分表。</li>
+</ol>
+<p>分布式系统的意义在于：</p>
+<ol>
+<li>升级单机处理能力的性价比越来越低</li>
+<li>单机处理能力存在瓶颈</li>
+<li>出于稳定性和可用性的考虑</li>
+</ol>
+<h2 id="分布式系统会遇到哪些问题？"><a href="#分布式系统会遇到哪些问题？" class="headerlink" title="分布式系统会遇到哪些问题？"></a>分布式系统会遇到哪些问题？</h2><ol>
+<li>全局时钟</li>
+<li>全局sequence</li>
+<li>全局事务</li>
+<li>数据个维度查询</li>
+<li>分布式锁</li>
+</ol>
+<h2 id="如何解决这些问题？"><a href="#如何解决这些问题？" class="headerlink" title="如何解决这些问题？"></a>如何解决这些问题？</h2><h3 id="服务框架"><a href="#服务框架" class="headerlink" title="服务框架"></a>服务框架</h3><p>远程服务框架，现在成型的多个，可以选择开源的来用。<br>消费者：接口调用–&gt;寻址路由–&gt;编码–&gt;通信<br>提供者： –&gt;通信– &gt;解码–&gt;实例定位–&gt;服务调用.</p>
+<h3 id="数据库访问层"><a href="#数据库访问层" class="headerlink" title="数据库访问层"></a>数据库访问层</h3><p>分库分表中间件，使用方便无感知，解决分库分表之后数据的查询，分库分表之后的sequence</p>
+<h3 id="消息中间件"><a href="#消息中间件" class="headerlink" title="消息中间件"></a>消息中间件</h3><p>消息中间间与消息丢失。</p>
+<h3 id="配置中心"><a href="#配置中心" class="headerlink" title="配置中心"></a>配置中心</h3><p>灵活配置各种参数</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

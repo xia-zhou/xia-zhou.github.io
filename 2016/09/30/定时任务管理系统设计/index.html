@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Cydeer">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="定时任务管理系统设计"/>
+  <meta property="og:description" content="不同的生活， 带来不同的际遇， 福祸好歹， 终会积累成经历的一种， 脚步匆匆， 只是不知下一站会在哪里... 一切只是开始，一切也终将继续" />
+  <meta property="og:site_name" content="下个路口见"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://www.merlin4io.comundefined"/>
+  
+    <link rel="alternate" href="/atom.xml" title="下个路口见" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>下个路口见</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">定时任务管理系统设计</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/<your-github-username>">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:<your-email-address>">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By Cydeer</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">9月 30 2016</span>
+            <span class="time">20:27:07</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h3 id="为什么需要定时任务？"><a href="#为什么需要定时任务？" class="headerlink" title="为什么需要定时任务？"></a>为什么需要定时任务？</h3><p>业务系统需要自动完成一些工作，定时处理一些业务，比如说，订单7天未支付自动关闭，月底统计订单数据量，每天统计用户增长量等，涉及到需要系统自动完成的，不需要人为操作的，都可以用定时任务来做，或者说，人为来做比较麻烦的。</p>
+<h3 id="什么情况下定时任务需要管理？"><a href="#什么情况下定时任务需要管理？" class="headerlink" title="什么情况下定时任务需要管理？"></a>什么情况下定时任务需要管理？</h3><p>当你只有一个系统的时候，可能不需要一个系统来管理你的定时任务，你可能自己系统来管理就行了，或者说，你系统的定时任务很少，自己管理就足够了。</p>
+<p>但是通常情况下，因为涉及到定时任务，需要确定，如果定时任务没有执行，是否需要手动触发，如果定时任务涉及外部数据的时候，执行失败，当修复好外部数据之后，是否需要重新发起执行，这就涉及到，你的定时任务是否都需要一个外部入口，手动调用。这样的话，因为系统不能随时发布重新调整cron表达式，重新执行，所以我们需要来管理。当然这里说的定时任务时通过spring的Scheduled注解来实现的方式的定时任务，如果你的实现方式是其他类型的定时任务，可以思考下面的方法是否能够通用。<br><a id="more"></a></p>
+<h3 id="我们需要一个什么样的定时任务管理系统？"><a href="#我们需要一个什么样的定时任务管理系统？" class="headerlink" title="我们需要一个什么样的定时任务管理系统？"></a>我们需要一个什么样的定时任务管理系统？</h3><ul>
+<li>有多个业务系统。</li>
+<li>每个业务系统都有或多或少的定时任务。</li>
+<li>定时任务能够动态的禁止运行。</li>
+<li>定时任务能够手动触发。</li>
+<li>定时任务能够动态修改执行的cron表达式。</li>
+<li>定时任务执行结果反馈（执行成功，还是执行失败）。</li>
+</ul>
+<p>首先涉及到多个业务系统，那就需要系统交互，多个业务系统和自身定时任务系统的交互，交互方式可以用dubbo方式的soa来解决。</p>
+<p>每个业务系统有多个定时任务，所以定时任务系统需要记录各个系统名称，各个定时任务名称。</p>
+<p>能够动态的禁止定时任务运行和手动触发，所以需要管理每个定时任务的状态。</p>
+<p>能够动态修改cron表达式，所以需要记录cron表达式，并且在cron表达式的时间执行定时任务。</p>
+<p>定时任务执行结果需要反馈，所以需要记录定时任务执行的结果。</p>
+<h3 id="如何实现？"><a href="#如何实现？" class="headerlink" title="如何实现？"></a>如何实现？</h3><p>既然需要业务系统和task系统之间的调用，那么业务系统就需要暴漏soa接口，task系统也要暴漏soa接口，但是为了做到业务系统使用简单，业务系统的soa接口，使用task系统提供的jar包提供，然后通过扩展ioc容器启动过程，暴漏接口。在定时任务执行完成之后回调task系统的接口，通知定时任务执行的结果。task系统展示之行结果。</p>
+<p>task系统存储所有的定时任务，在系统启动之后，扫描所有的定时任务，检查定时任务是否准备就绪，准备就绪就把当前定时任务当作一个job交给schedule，schedule检查该定时任务是否已经在执行计划中了，如果不在就加入到执行计划中，按照cron指定的表达式去按时执行任务。在后台暂停，定时任务时，通知schedule终止定时任务。</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

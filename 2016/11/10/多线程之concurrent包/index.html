@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Cydeer">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="多线程之concurrent包"/>
+  <meta property="og:description" content="不同的生活， 带来不同的际遇， 福祸好歹， 终会积累成经历的一种， 脚步匆匆， 只是不知下一站会在哪里... 一切只是开始，一切也终将继续" />
+  <meta property="og:site_name" content="下个路口见"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://www.merlin4io.comundefined"/>
+  
+    <link rel="alternate" href="/atom.xml" title="下个路口见" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>下个路口见</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">多线程之concurrent包</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/<your-github-username>">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:<your-email-address>">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By Cydeer</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">11月 10 2016</span>
+            <span class="time">20:27:07</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h3 id="信号量（Semaphore）"><a href="#信号量（Semaphore）" class="headerlink" title="信号量（Semaphore）"></a>信号量（Semaphore）</h3><p>控制线程并发的数量。主要限制并发线程的数量，如果不限制并发线程的数量则CPU的资源会很快会被耗尽，每个线程执行的任务是相当缓慢，因为CPU要把时间片分配给不同的线程对象，而且上下文的切换也要耗时，最终导致系统运行效率降低，所以，控制并发线程的数量是必要的。<br><a id="more"></a><br>可以做线程同步之用，类似于synchroinzed,reentrantLock. 声明只能有一个线程同步反问的信号量：</p>
+<pre><code>int permits = 1;
+Semaphore semaphore = new Semaphore(permits);
+</code></pre><p>同步之前调用semaphore.acquire();同步结束之后调用semaphore.release();Semphore的构造函数参数permits代表同一时间内，最多允许多少个线程同时执行acquire()与release()之间的代码。</p>
+<p>每次获取许可也可以指定获取多少个许可，acquire(permits);信号量的声明也可以声明称公平的和非公平的。</p>
+<h3 id="Exchanger"><a href="#Exchanger" class="headerlink" title="Exchanger"></a>Exchanger</h3><p>Exchanger可以使两个线程时间传输数据，他比使用wait，notify的生产者，消费者更方便，Exchanger.exchange(T result);具有阻塞性。如果没有其他线程取得数据就一直阻塞等待。</p>
+<h3 id="CountDownLatch"><a href="#CountDownLatch" class="headerlink" title="CountDownLatch"></a>CountDownLatch</h3><p>是一个倒计数的锁存器，当计数减至0时触发特定的事件。先等待，等所有的参与者都调用了countDown(),之后继续执行。</p>
+<p>声明一个总数为10的倒计数锁存器：</p>
+<pre><code>CountDownLatch latch = new CountDownLatch(10);
+</code></pre><p>进入阻塞状态：</p>
+<pre><code>latch.await();
+</code></pre><p>当调用latch.countDown();达到10次的时候，就会开始执行await()下面的代码；</p>
+<h3 id="CyclicBarrier"><a href="#CyclicBarrier" class="headerlink" title="CyclicBarrier"></a>CyclicBarrier</h3><p>一个同步辅助类，它允许一组线程互相等待，直到到达某个公共屏障点 (common barrier point)。在涉及一组固定大小的线程的程序中，这些线程必须不时地互相等待，此时 CyclicBarrier 很有用。因为该 barrier 在释放等待线程后可以重用，所以称它为循环 的 barrier。CyclicBarrier 支持一个可选的 Runnable 命令，在一组线程中的最后一个线程到达之后（但在释放所有线程之前），该命令只在每个屏障点运行一次。若在继续所有参与线程之前更新共享状态，此屏障操作 很有用。<br>类似CountDownLatch，但这个是累加的，先到达的先等待，等到所有的参与者都到了之后所有的参与者都一起向下执行。</p>
+<p>声明一个栅栏：</p>
+<pre><code>CyclicBarrier barrier = new CycliBarrier(5);
+或者
+CyclicBarrier barrier = new CycliBarrier(5,new Runable(){
+    public void run(){
+
+    }
+});
+</code></pre><p>先到先等待：</p>
+<pre><code>barrier.await();
+</code></pre><p>都到了就触发公共屏障点的Runable,然后继续往下面执行。</p>
+<h3 id="Phaser"><a href="#Phaser" class="headerlink" title="Phaser"></a>Phaser</h3><p>设置多屏障，动态添加计数。主要方法：new Phaser(parties);parties为计数的总数。<br>arriveAndAwaitAdvance();计数满足的时候会放行，也可以在计数满足之后执行onAdvance方法然后放行。<br>可以使用arriverAndDeregister(),可以使parites减一。register()方法可以增加parties的数量。<br>    可以动态添加参与者。</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

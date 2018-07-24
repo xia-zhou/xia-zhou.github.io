@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Cydeer">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="Kafka到logstash到elasticsearch到kinana"/>
+  <meta property="og:description" content="不同的生活， 带来不同的际遇， 福祸好歹， 终会积累成经历的一种， 脚步匆匆， 只是不知下一站会在哪里... 一切只是开始，一切也终将继续" />
+  <meta property="og:site_name" content="下个路口见"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://www.merlin4io.comundefined"/>
+  
+    <link rel="alternate" href="/atom.xml" title="下个路口见" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>下个路口见</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">Kafka到logstash到elasticsearch到kinana</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/<your-github-username>">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:<your-email-address>">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By Cydeer</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">4月 12 2017</span>
+            <span class="time">20:27:07</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h2 id="下载地址"><a href="#下载地址" class="headerlink" title="下载地址"></a>下载地址</h2><p>zookeeper: <a href="https://zookeeper.apache.org/releases.html" target="_blank" rel="external">https://zookeeper.apache.org/releases.html</a>    最新版走起。</p>
+<p>文档地址： <a href="https://zookeeper.apache.org/doc/r3.5.2-alpha/zookeeperStarted.html" target="_blank" rel="external">https://zookeeper.apache.org/doc/r3.5.2-alpha/zookeeperStarted.html</a> 够详细了，创建conf文件，启动，命令行连接。</p>
+<p>kafka：<a href="http://kafka.apache.org/downloads" target="_blank" rel="external">http://kafka.apache.org/downloads</a> 最新版的搞起.</p>
+<p>文档地址：<a href="http://kafka.apache.org/quickstart" target="_blank" rel="external">http://kafka.apache.org/quickstart</a> 一步一步往前走。</p>
+<p>elasticsearch :<a href="https://www.elastic.co/cn/downloads/elasticsearch" target="_blank" rel="external">https://www.elastic.co/cn/downloads/elasticsearch</a> 最新版然后启动命令什么的都有。</p>
+<p>详细文档地址：<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/getting-started.html" target="_blank" rel="external">https://www.elastic.co/guide/en/elasticsearch/reference/current/getting-started.html</a></p>
+<p>kibana:<a href="https://www.elastic.co/cn/downloads/kibana" target="_blank" rel="external">https://www.elastic.co/cn/downloads/kibana</a></p>
+<p>详细文档地址： <a href="https://www.elastic.co/guide/en/kibana/current/getting-started.html" target="_blank" rel="external">https://www.elastic.co/guide/en/kibana/current/getting-started.html</a></p>
+<p>logstash:<a href="https://www.elastic.co/cn/downloads/logstash" target="_blank" rel="external">https://www.elastic.co/cn/downloads/logstash</a></p>
+<p>详细文档地址：<a href="https://www.elastic.co/guide/en/logstash/current/getting-started-with-logstash.html" target="_blank" rel="external">https://www.elastic.co/guide/en/logstash/current/getting-started-with-logstash.html</a><br><a id="more"></a></p>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>其实所有的文档，上面都有的，每个工具如何配置，启动都有了，有些需要自己创建配置文件，有些需要修改一些地址。</p>
+<p>首先zookeeper的配置文件，需要自己新建，copy一个zoo_sample.cfg重命名为zoo.cfg可以制定启动的端口号，数据的存储地址。然后启动，可以通过zkClient自己连接之后测试。sh zkClient.sh -server localhost:2181.</p>
+<p>kafka的配置：server.properties中配置zookeeper.connect=localhost:2181；zookeeper.properties中配置端口clientPort。然后可以根据文档提示，启动服务，打开生产者窗口，打开消费者窗口，可以自己玩了。</p>
+<p>elasticsearch的配置，可以使用默认，配置内容在elasticsearch.yml，可以修改cluster.name。这个地方有个注意的东西，如果自己安装了x-pack,会启用安全检测，es打开的时候需要输入用户名密码，用户名：”elastic”密码：”changeme”。后面kiban配置的时候需要在kibana.yml中配置<br>elasticsearch.username: “elastic”<br>elasticsearch.password: “changeme” 以及elasticsearch.url: “<a href="http://localhost:9200" target="_blank" rel="external">http://localhost:9200</a>“<br>elasticsearch启动之后可以 <a href="http://localhost:9200/?pretty" target="_blank" rel="external">http://localhost:9200/?pretty</a>打开验证。</p>
+<p>kibana配置之后打开<a href="http://localhost:5601/" target="_blank" rel="external">http://localhost:5601/</a>验证。</p>
+<p>logstash的配置:logstash配置文件需要自己新建，内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">input &#123;</div><div class="line">        kafka&#123;</div><div class="line">                bootstrap_servers =&gt; &quot;localhost:9092&quot;</div><div class="line">                group_id =&gt; &quot;logstash&quot;</div><div class="line">                topics =&gt; [&quot;xiazhou_test&quot;]</div><div class="line">                consumer_threads =&gt; 5</div><div class="line">                decorate_events =&gt; true</div><div class="line">        &#125;</div><div class="line">&#125;</div><div class="line">output &#123;    </div><div class="line">     elasticsearch &#123;    </div><div class="line">        hosts =&gt; [&quot;127.0.0.1:9200&quot;]  </div><div class="line">        user =&gt; elastic</div><div class="line">        password =&gt;changeme       </div><div class="line">    &#125;    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其中kafka中需要制定topics，topics是个数组，按照kafka创建的topic填写即可。bootstrap_servers为kafka的地址，可以是集群，老的方式可以配置zk地址，新版本现在不支持。这些配置之后，可以 通过。<br>bin/logstash -f config/logstash_simple.conf来启动，然后可以在命令行发消息到topic中，然后会到elasticsearch中。</p>
+<p>打开kibana，配置Configure an index pattern，然后就可以看到具体的内容了。</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

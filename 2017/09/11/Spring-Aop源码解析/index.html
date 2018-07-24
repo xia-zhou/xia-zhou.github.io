@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Cydeer">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="Spring Aop源码解析"/>
+  <meta property="og:description" content="不同的生活， 带来不同的际遇， 福祸好歹， 终会积累成经历的一种， 脚步匆匆， 只是不知下一站会在哪里... 一切只是开始，一切也终将继续" />
+  <meta property="og:site_name" content="下个路口见"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://www.merlin4io.comundefined"/>
+  
+    <link rel="alternate" href="/atom.xml" title="下个路口见" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>下个路口见</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">Spring Aop源码解析</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/<your-github-username>">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:<your-email-address>">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By Cydeer</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">9月 11 2017</span>
+            <span class="time">20:27:07</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h3 id="配置文件加载"><a href="#配置文件加载" class="headerlink" title="配置文件加载"></a>配置文件加载</h3><p>要启用Aop，我们一般会在配置文件中配置<aop:aspectj-autoproxy>,而Spring启动的时候，解析xml文件的时候，根据Namespace确定用自身的解析器还是用自定义的，而使用aop就是使用自定义的AopNamespeceHandler，这个handler中会设置aspectj-autoproxy的解析使用AspectjAutoProxyBeanDefinitionParser解析器解析。<br><img src="/2017/09/11/Spring-Aop源码解析/20160421171458953.png" alt=""><br>进入AspectjAutoProxyBeanDefinitionParser解析器后，会把解析请求交给AopNamespaceUtils.registerAspectJAnnotationAutoProxyCreatorIfNecessary去处理，这里面会先用AopConfigUtils.registerAspectJAnnotationAutoProxyCreatorIfNecessary去处理，然后这里面有调用自身的方法registerOrEscalateApcAsRequired注册或者升级AnnotationAwareAspectJAutoProxyCreator，对于aop的实现，基本是靠AnnotationAwraeAspectJAutoProxyCreator去完成的，它可以根据pointcut注解定义的切点来代理相匹配的bean。</aop:aspectj-autoproxy></p>
+<p>AopConfigUtils的registerAspectJAnnotationAutoProxyCreatorIfNecessary的方法处理之后会调用useClassProxyingIfNecessary处理proxy-target-class以及expose-proxy属性。如果proxy-target-class设置为true的话，那么会强制使用CDLIB代理，否则会按照是否有接口来确定使用jdb动态代理，还是CGLIB代理，expose-proxy属性是为了解决有时候需要目标对象内部的自我调用无法实现切面的增强。<br>最后调用registerComponentIfNecessary注册组建。</p>
+<p>然后回到AspectjAutoProxyBeanDefinitionParse中调用extendBeanDefinition方法。<br>这些执行之后spring容器中（getRegistry(),DefautListableBeanFactory）的beanDefinitionMap中会有key为org.springframework.aop.config.internalAutoProxyCreator，<br>value为Root bean: class [org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null的beanDefinition信息。</p>
+<h3 id="Aop注解内容的加载，代理的生成"><a href="#Aop注解内容的加载，代理的生成" class="headerlink" title="Aop注解内容的加载，代理的生成"></a>Aop注解内容的加载，代理的生成</h3><p><img src="/2017/09/11/Spring-Aop源码解析/20160422140500226.png" alt=""><br>初始化入口为：上面说到AOP的核心逻辑是在AnnotationAwareAspectJAutoProxyCreator类里面实现，该类实现了BeanPostProcessor接口，这就意味着，spring加载实例前会调用postProcessBeforeInstantiation以及postProcessAfterInitialization方法，对于Aop的逻辑也是由此开始的，该方法的实现在：AbstractAutoProxyCreator中，初始化之前<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">public Object postProcessBeforeInstantiation(Class&lt;?&gt; beanClass, String beanName) throws BeansException &#123;</div><div class="line">	Object cacheKey = getCacheKey(beanClass, beanName);</div><div class="line"></div><div class="line">	if (beanName == null || !this.targetSourcedBeans.contains(beanName)) &#123;</div><div class="line">		if (this.advisedBeans.containsKey(cacheKey)) &#123;</div><div class="line">			return null;</div><div class="line">		&#125;</div><div class="line">		if (isInfrastructureClass(beanClass) || shouldSkip(beanClass, beanName)) &#123;</div><div class="line">			this.advisedBeans.put(cacheKey, Boolean.FALSE);</div><div class="line">			return null;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	// Create proxy here if we have a custom TargetSource.</div><div class="line">	// Suppresses unnecessary default instantiation of the target bean:</div><div class="line">	// The TargetSource will handle target instances in a custom fashion.</div><div class="line">	if (beanName != null) &#123;</div><div class="line">		TargetSource targetSource = getCustomTargetSource(beanClass, beanName);</div><div class="line">		if (targetSource != null) &#123;</div><div class="line">			this.targetSourcedBeans.add(beanName);</div><div class="line">			Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(beanClass, beanName, targetSource);</div><div class="line">			Object proxy = createProxy(beanClass, beanName, specificInterceptors, targetSource);</div><div class="line">			this.proxyTypes.put(cacheKey, proxy.getClass());</div><div class="line">			return proxy;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	return null;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>初始化之前主要是从所有的bean中找到用户定义的aspect对应的bean。暂时还不是特别清楚。<br>初始化之后：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException &#123;</div><div class="line">	if (bean != null) &#123;</div><div class="line">		Object cacheKey = getCacheKey(bean.getClass(), beanName);</div><div class="line">		if (!this.earlyProxyReferences.contains(cacheKey)) &#123;</div><div class="line">			return wrapIfNecessary(bean, beanName, cacheKey);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	return bean;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>每个 bean实例化之前都会进过该方法，然后接下来调用wrapIfNecessary方法，该方法的重点在<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);</div></pre></td></tr></table></figure></p>
+<p>这个方法会通过findCandidateAdvisors获取所有类型为Advisor的bean。然后通过findAdvisorsThatCanApply该方法获取对当前bean有效的Advisor，然后排序返回。最后最重要的来了，创建代理：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Object proxy = createProxy(bean.getClass(), beanName, specificInterceptors, new SingletonTargetSource(bean));</div></pre></td></tr></table></figure></p>
+<p>该方法比较简单，设置一些基础的东西，属性，创建代理。先创建代理工厂proxyFactory，然后获取当前bean 的增强器advisors，然后使用defaultAopProxyFactory创建代理，创建代理的时候，根据是否制定了特定方式，选择创建JdkDynamicAopProxy或者ObjenesisCglibAopProxy。创建操作结束，接下来实例化也是对这个代理的实例化。</p>
+<h3 id="Aop动态代理执行"><a href="#Aop动态代理执行" class="headerlink" title="Aop动态代理执行"></a>Aop动态代理执行</h3><p>JdkDynamicAopProxy则会调用内部的invoke方法，ObjenesisCglibAopProxy则会调用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div></pre></td><td class="code"><pre><div class="line">public Object invoke(Object proxy, Method method, Object[] args) throwsThrowable &#123;</div><div class="line">       MethodInvocation invocation = null;</div><div class="line">       Object oldProxy = null;</div><div class="line">       boolean setProxyContext = false;</div><div class="line"> </div><div class="line">       TargetSource targetSource = this.advised.targetSource;</div><div class="line">       Class targetClass = null;</div><div class="line">       Object target = null;</div><div class="line"> </div><div class="line">       try &#123;</div><div class="line">           //eqauls()方法，具目标对象未实现此方法</div><div class="line">           if (!this.equalsDefined &amp;&amp; AopUtils.isEqualsMethod(method))&#123;</div><div class="line">                return (equals(args[0])? Boolean.TRUE : Boolean.FALSE);</div><div class="line">           &#125;</div><div class="line"> </div><div class="line">           //hashCode()方法，具目标对象未实现此方法</div><div class="line">           if (!this.hashCodeDefined &amp;&amp; AopUtils.isHashCodeMethod(method))&#123;</div><div class="line">                return newInteger(hashCode());</div><div class="line">           &#125;</div><div class="line"> </div><div class="line">           //Advised接口或者其父接口中定义的方法,直接反射调用,不应用通知</div><div class="line">           if (!this.advised.opaque &amp;&amp;method.getDeclaringClass().isInterface()</div><div class="line">                    &amp;&amp;method.getDeclaringClass().isAssignableFrom(Advised.class)) &#123;</div><div class="line">                // Service invocations onProxyConfig with the proxy config...</div><div class="line">                return AopUtils.invokeJoinpointUsingReflection(this.advised,method, args);</div><div class="line">           &#125;</div><div class="line"> </div><div class="line">           Object retVal = null;</div><div class="line"> </div><div class="line">           if (this.advised.exposeProxy) &#123;</div><div class="line">                // Make invocation available ifnecessary.</div><div class="line">                oldProxy = AopContext.setCurrentProxy(proxy);</div><div class="line">                setProxyContext = true;</div><div class="line">           &#125;</div><div class="line"> </div><div class="line">           //获得目标对象的类</div><div class="line">           target = targetSource.getTarget();</div><div class="line">           if (target != null) &#123;</div><div class="line">                targetClass = target.getClass();</div><div class="line">           &#125;</div><div class="line"> </div><div class="line">           //获取可以应用到此方法上的Interceptor列表</div><div class="line">           List chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method,targetClass);</div><div class="line"> </div><div class="line">           //如果没有可以应用到此方法的通知(Interceptor)，此直接反射调用 method.invoke(target, args)</div><div class="line">           if (chain.isEmpty()) &#123;</div><div class="line">                retVal = AopUtils.invokeJoinpointUsingReflection(target,method, args);</div><div class="line">           &#125; else &#123;</div><div class="line">                //创建MethodInvocation</div><div class="line">                invocation = newReflectiveMethodInvocation(proxy, target, method, args, targetClass, chain);</div><div class="line">                retVal = invocation.proceed();</div><div class="line">           &#125;</div><div class="line"> </div><div class="line">           // Massage return value if necessary.</div><div class="line">           if (retVal != null &amp;&amp; retVal == target &amp;&amp;method.getReturnType().isInstance(proxy)</div><div class="line">                    &amp;&amp;!RawTargetAccess.class.isAssignableFrom(method.getDeclaringClass())) &#123;</div><div class="line">                // Special case: it returned&quot;this&quot; and the return type of the method</div><div class="line">                // is type-compatible. Notethat we can&apos;t help if the target sets</div><div class="line">                // a reference to itself inanother returned object.</div><div class="line">                retVal = proxy;</div><div class="line">           &#125;</div><div class="line">           return retVal;</div><div class="line">       &#125; finally &#123;</div><div class="line">           if (target != null &amp;&amp; !targetSource.isStatic()) &#123;</div><div class="line">                // Must have come fromTargetSource.</div><div class="line">               targetSource.releaseTarget(target);</div><div class="line">           &#125;</div><div class="line">           if (setProxyContext) &#123;</div><div class="line">                // Restore old proxy.</div><div class="line">                AopContext.setCurrentProxy(oldProxy);</div><div class="line">           &#125;</div><div class="line">       &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

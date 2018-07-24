@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Cydeer">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="多线程之线程池"/>
+  <meta property="og:description" content="不同的生活， 带来不同的际遇， 福祸好歹， 终会积累成经历的一种， 脚步匆匆， 只是不知下一站会在哪里... 一切只是开始，一切也终将继续" />
+  <meta property="og:site_name" content="下个路口见"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://www.merlin4io.comundefined"/>
+  
+    <link rel="alternate" href="/atom.xml" title="下个路口见" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>下个路口见</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">多线程之线程池</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/<your-github-username>">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:<your-email-address>">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By Cydeer</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">11月 10 2016</span>
+            <span class="time">20:27:07</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h3 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h3><p>Executor: void execute(Runnable command);提交任务。</p>
+<p>ExecutorService，继承Executor:</p>
+<ol>
+<li>void shutdown();拒绝接受新任务，会把队列里面的任务也执行掉，如果任务中有中断判断是可以中断的，否则执行完。</li>
+<li>List<runnable> shutdownNow();拒绝接受新任务，返回没有执行的任务列表，如果任务中有中断判断，是可以中断的，否则就执行完。</runnable></li>
+<li>Future<t> submit(Callable<t>); 提交一个有返回值的任务，submit的任务不能够被remove。</t></t></li>
+<li>List<future<t>&gt; invokeAll(Collection&lt;? extends Callable<t>&gt; tasks);当所有的订单任务都执行完成才会返回，里面的任何一个定时任务出现异常都会抛出异常，并且中断。</t></future<t></li>
+<li>T invokeAny(Collection&lt;? extends Callable<t>&gt; tasks);当有一个执行完成就会返回，但是其他的任务会照常执行，除非里面有中断判断，可以中断，否则都会执行完。如果有异常，会跳过，执行下一个，如果最后都有异常，则抛出最后一个的异常。<a id="more"></a>
+<h3 id="工厂类"><a href="#工厂类" class="headerlink" title="工厂类"></a>工厂类</h3></t></li>
+</ol>
+<h4 id="Executors"><a href="#Executors" class="headerlink" title="Executors:"></a>Executors:</h4><ol>
+<li>newFixedThreadPool:新建一个固定大小的线程池。</li>
+<li>newCachedThreadPool: 新建一个无界的线程池。</li>
+<li>newSingleThreadScheduledExecutor:新建一个单线程的线程池。</li>
+<li>创建线程池的时候可以指定线程工厂ThreadFactory，线程工厂可以指定如何处理线程运行中产生 的没有catch的异常。也可以指定线程的一些基本信息，比如线程的名字，等。</li>
+</ol>
+<p>初始化线程池的时候有几个参数需要注意的：corePoolSize,maxPoolSize,keepAlive,BlockingQueue。<br>当有任务执行的时候新建线程当达到corePoolSize之后，看使用的blockingQueue是什么，如果是LinkedBlockingQueue并且无界,则其他参数忽略，多余的都放到queue中。如果是有界，则queue放满之后新建线程到maxPoolSize，先提交到队列中的先给新的线程，后面提交的继续放到队列中，如果最后到达maxPoolSize之后还有新的任务，则抛出RejectException。如果queue使用的是SychronousQueue，则到达corePoolSize之后，继续新建线程到maxPoolSize，如果继续有任务，则抛出RejectException.</p>
+<h4 id="线程的拒绝"><a href="#线程的拒绝" class="headerlink" title="线程的拒绝"></a>线程的拒绝</h4><ol>
+<li>可以设置线程池的拒绝接受任务处理器，通过setRejectedExecutionHandler()方法设置。</li>
+<li>线程拒绝策略有四种<ul>
+<li>第一种直接抛出RejectException。</li>
+<li>第二种等待。一直到能够接受任务。</li>
+<li>第三种丢弃较早添加的任务。</li>
+<li>第四种丢弃当前添加的任务。</li>
+</ul>
+</li>
+</ol>
+<p>监控线程运行情况:重写线程池的beforeExecute()和afterExecute()方法可以监控线程的运行，比如过线程的运行时间等。<br>移除任务：remove()方法可以移除尚未执行的Runnable任务，但是不能移除submit的任务。</p>
+<h3 id="Callable与Future"><a href="#Callable与Future" class="headerlink" title="Callable与Future"></a>Callable与Future</h3><p>Callable与runnable的区别</p>
+<ol>
+<li>runnable没有返回值，不能声明异常。</li>
+<li>callable有返回值，可以声明异常。<br>通过future获取对应的执行结果。future的实现类futureTask；future.get(),阻塞。</li>
+</ol>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

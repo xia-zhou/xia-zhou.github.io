@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Cydeer">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="性能优化之字符串操作"/>
+  <meta property="og:description" content="不同的生活， 带来不同的际遇， 福祸好歹， 终会积累成经历的一种， 脚步匆匆， 只是不知下一站会在哪里... 一切只是开始，一切也终将继续" />
+  <meta property="og:site_name" content="下个路口见"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://www.merlin4io.comundefined"/>
+  
+    <link rel="alternate" href="/atom.xml" title="下个路口见" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>下个路口见</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">性能优化之字符串操作</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/<your-github-username>">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:<your-email-address>">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By Cydeer</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">3月 13 2017</span>
+            <span class="time">20:27:07</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <p>字符串的三个优化：</p>
+<ol>
+<li>不可变</li>
+<li>常量池</li>
+<li>final类</li>
+</ol>
+<p>不可变解决了线程安全问题，不用考虑线程安全问题。常量池，把经常食用的字符串放在常量池中，减少不断的创建，final类，安全。<br>String的实现为，一个char[]数组，一个offset偏移量，一个lentgh长度。</p>
+<p>使用String需要注意的几个问题</p>
+<ol>
+<li>subString(int start),subString(int start ,int end)，两个方法最终都会使用字符串的一个构造方法，new Strign(int offset,int length,char[] value),所以每次subString都会生成新的字符串，而且调用的时候是，new String(offset+start,end-start,this.value),这样就会每次子串都含有一个原来char[]数组的引用，导致char[]数组不能被垃圾回收器回收，如果char[]数组很大，操作次数达到一定程度就会导致内存泄漏。这也是用空间换取时间的方法。可以使用subString之后在用当前字符串new一个出来，这样原来char[]数组的饮用就会被垃圾回收回收掉。</li>
+<li>split(String reg),根据某个字符分割，可以支持正则表达式，但是这个效率很低，可以选择使用StringTokenizer来分隔，效率会高一点，挥着自己实现，不断的调用indexOf和subString即可，只要注意处理好内存就可以了。因为indexOf，和subString都是很高效的。同样charAt也是很高效的。</li>
+<li>字符串的拼接，如果是常量则虽然是string+string,但是编译之后就会合并成一个字符串，如果不是常量，string+变量，编译器会转化成stringBuilder的apend，但是有的时候，编译器并不是智能的，转化过程中，new  StringBuilder().append()。如果循环构建就会新建很多的StringBuilder。所以最好自己使用StringBuilder拼接，类似的有StringBuffer,StringBuffer是线程安全的。其他的和StringBuilder一样。</li>
+<li>startWith，endWith比较慢，可以使用charAt来代理。如果明确知道参数的话。</li>
+</ol>
+<p>扩展阅读：</p>
+<p><a href="http://www.importnew.com/12845.html" target="_blank" rel="external">Java中关于String类型的10个问题</a></p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

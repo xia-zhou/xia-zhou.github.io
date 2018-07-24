@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Cydeer">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="Memcached缓存小记"/>
+  <meta property="og:description" content="不同的生活， 带来不同的际遇， 福祸好歹， 终会积累成经历的一种， 脚步匆匆， 只是不知下一站会在哪里... 一切只是开始，一切也终将继续" />
+  <meta property="og:site_name" content="下个路口见"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://www.merlin4io.comundefined"/>
+  
+    <link rel="alternate" href="/atom.xml" title="下个路口见" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>下个路口见</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">Memcached缓存小记</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/<your-github-username>">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:<your-email-address>">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By Cydeer</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">9月 5 2016</span>
+            <span class="time">20:27:07</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/Memcached/">#Memcached</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h3 id="为什么用缓存？"><a href="#为什么用缓存？" class="headerlink" title="为什么用缓存？"></a>为什么用缓存？</h3><p>为什么用缓存？什么情况下用缓存？<br>    当对数据的读取很频繁，数据又不经常变化，数据库压力比较大的情况下，使用缓存可以很好的解决问题。缓存有多重，有本地缓存（ehcached），但线程缓存（redis），分布式缓存（memcached），各有各的优势，各有各的适用范围，比如说小系统，单机模式，本地缓存足够了，不用考虑多台机子之间的同步，使用成本也低。再大一点可以使用redis，redis的数据类型比较广泛，有String,list,map,set,集合类型数据，redis本身会做压缩，占用的内存会比较小。<br><a id="more"></a><br>    数据库的连接数；<br>    jvm中的线程数；<br>    高数据访问量放到缓存中；<br>    缓存数据持久化；<br>    redis有两种持久化方式：rdb和aof，是一种snapshop（快照）的方式存储数据，对应产生dump.rdb文件，可配置当有多少个key发生变化的时候，隔多久保存快照一次。aof的方式即append－of－file，是把操作命令写到文件中，可以控制每次发生操作命令就写入，或者每隔几秒钟写入一次。AOF(Append-Only File)比RDB方式有更好的持久化性，aof类似数据库的binlog。</p>
+<p>memcached只支持key，value的数据类型，复杂数据类型需要使用者自己解析。memcached客户端比较重，服务端比较轻，分布式的实现也是客户端完成的。redis使用起来简单，方便入手快，memcached使用起来比较繁琐。redis和spring集成的比较好，堪称完美，但是memcached和spring集成的就没那么好了，有不同的客户端，各个客户端的性能和稳定性也不同，要按照自己应用的需求来使用相应的客户端，但是总的来说用起来还是没那么方便，所以仿照别人写了一个基于springAOP，采用注解的方式方便使用缓存。</p>
+<p>下面先简单的介绍一下memcached：</p>
+<p>优势：</p>
+<pre><code>协议简单，基于文本的协议。
+基于libevent的事件处理，封装成统一的接口。
+内置内存存储方式，提高性能。
+不互通信的分布式，服务器端不支持分布式，主要通过客户端来实现。
+</code></pre><p>Memcached删除数据时数据不会真正从memcached中消失。Memcached不会释放已分配的内存。记录超时后，客户端就无法再看见该记录（invisible 透明），其存储空间即可重复使用。</p>
+<p>Lazy Expriationmemcached内部不会监视记录是否过期，而是在get时查看记录的时间戳，检查记录是否过期。这种技术称为lazy expiration.因此memcached不会再过期监视上耗费CPU时间。</p>
+<p>对于缓存存储容量满的情况下的删除需要考虑多种机制，一方面是按队列机制，一方面应该对应缓存对象本身的优先级，根据缓存对象的优先级进行对象的删除。</p>
+<h3 id="基于AOP的注解实现缓存"><a href="#基于AOP的注解实现缓存" class="headerlink" title="基于AOP的注解实现缓存"></a>基于AOP的注解实现缓存</h3><p>两个注解，存储缓存注解：</p>
+<pre><code>package com.cydeer.demo.memcached.annotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * Created by zhangsong on 16/1/19.
+ */
+@Target({ ElementType.METHOD, ElementType.TYPE })
+@Retention(RetentionPolicy.RUNTIME)
+public @interface CacheableExt {
+
+    /**
+     * @return 扩展 keys，如果同一个方法里面有相同的参数，防止key重复 暂时未开启
+     */
+    String keyExt() default &quot;&quot;;
+
+    /**
+     * 使用规则：&lt;BR&gt;
+     * 1. 返回的是数组类型，数组中的每个值与参数中的对象一一对应。不过数组的长度允许与参数个数不同，&lt;BR&gt;
+     * 但实际运行时将以参数长度来自动匹配数据中相应位置的值；&lt;BR&gt;
+     * 2. 数组中的每个值，以英文逗号（,）分隔，用来区分对象中系列化要包含的多个字段；&lt;BR&gt;
+     * 3. 对于参数中若有对象不需要排除字段的，请以空字符串定义；&lt;BR&gt;
+     * 4. 复杂DTO对象中不支持再有复杂对象作为因子Key；&lt;BR&gt;
+     *
+     * @return 返回缓存排除JSON系统化KEY时的字段列表
+     */
+    String[] keys() default {};
+
+    /**
+     * @return 设置缓存过期时间，默认 60 秒
+     */
+    int expire() default 60;
+
+}
+</code></pre><p>缓存失效注解：</p>
+<pre><code>package com.cydeer.demo.memcached.annotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * Created by zhangsong on 16/1/19.
+ */
+@Target({ ElementType.METHOD, ElementType.TYPE })
+@Retention(RetentionPolicy.RUNTIME)
+public @interface CacheEvictExt {
+    /**
+     * @return 扩展 keys，如果同一个方法里面有相同的参数，防止key重复 暂时未开启
+     */
+    String keyExt() default &quot;&quot;;
+
+    /**
+     * 使用规则：&lt;BR&gt;
+     * 1. 返回的是数组类型，数组中的每个值与参数中的对象一一对应。不过数组的长度允许与参数个数不同，&lt;BR&gt;
+     * 但实际运行时将以参数长度来自动匹配数据中相应位置的值；&lt;BR&gt;
+     * 2. 数组中的每个值，以英文逗号（,）分隔，用来区分对象中系列化要包含的多个字段；&lt;BR&gt;
+     * 3. 对于参数中若有对象不需要排除字段的，请以空字符串定义；&lt;BR&gt;
+     * 4. 复杂DTO对象中不支持再有复杂对象作为因子Key；&lt;BR&gt;
+     *
+     * @return 返回缓存排除JSON系统化KEY时的字段列表
+     */
+    String[] keys() default {};
+
+    /**
+     * @return 清空key的情况下可能会需要清空多个key, 比如用户信息, 缓存可能为根据手机号缓存,
+     * 也可能根据用户id缓存,那么修改的时候就需要清空多个key
+     */
+    String[] secondKeys() default {};
+
+}
+</code></pre><p>对应的最重要的AOP类：</p>
+<p>两个方法，一个切面处理存储缓存，一个处理失效缓存，由于memcached不支持null值序列化，所以使用了一个静态内部类来替代null。另外特殊场景，清除缓存的时候有可能会清楚多个缓存，现在仅支持一次清除两个缓存。比如说：<br>用户信息, 缓存可能为根据手机号缓存, 也可能根据用户id缓存,那么修改的时候就需要清空多个key。其实最重要的方法还是生成key的方法。</p>
+<pre><code>package com.cydeer.demo.memcached.aop;
+
+import com.cydeer.demo.memcached.annotation.CacheEvictExt;
+import com.cydeer.demo.memcached.annotation.CacheKeyUtils;
+import com.cydeer.demo.memcached.annotation.CacheableExt;
+import com.cydeer.demo.memcached.client.CacheApi;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.lang.reflect.Method;
+
+/**
+ * Created by zhangsong on 16/1/20.
+ */
+@Aspect
+public class MemcachedExtAop {
+    private final static Logger LOGGER = LoggerFactory.getLogger(MemcachedExtAop.class);
+
+    private CacheableExt cacheableExt;
+    private CacheEvictExt cacheEvictExt;
+
+    private CacheApi cacheApi;
+
+    @Around(&quot;@annotation(com.cydeer.demo.memcached.annotation.CacheableExt)&quot;)
+    private Object cacheableProcess(ProceedingJoinPoint jp) throws Throwable {
+
+        Class&lt;?&gt; targetClz = jp.getTarget().getClass();
+
+        String methodName = jp.getSignature().getName();
+
+        if (!(jp.getSignature() instanceof MethodSignature)) {
+            LOGGER.warn(&quot;该方法接口无法启用缓存功能: {}&quot;, jp.getSignature().toLongString());
+            return jp.proceed();
+        }
+        MethodSignature methodSign = (MethodSignature) jp.getSignature();
+        Method method = targetClz.getMethod(methodName, methodSign.getParameterTypes());
+        cacheableExt = method.getAnnotation(CacheableExt.class);
+        if (cacheableExt == null) {
+            return jp.proceed();
+        }
+        if (cacheableExt.expire() &gt; 0) {
+            String cacheKey = CacheKeyUtils
+                    .buildCacheKey(cacheableExt.keyExt(), cacheableExt.keys(), targetClz, jp.getArgs());
+            Object result = cacheApi.get(cacheKey);
+            if (result == null) {
+                result = jp.proceed();
+                result = result == null ? Blank.INST : result;
+                cacheApi.put(cacheKey, result, cacheableExt.expire());
+            }
+            return result instanceof Blank ? null : result;
+        } else {
+            return jp.proceed();
+        }
+    }
+
+    @Around(&quot;@annotation(com.cydeer.demo.memcached.annotation.CacheEvictExt)&quot;)
+    private Object cacheevictProcess(ProceedingJoinPoint jp) throws Throwable {
+
+        Class&lt;?&gt; targetClz = jp.getTarget().getClass();
+
+        String methodName = jp.getSignature().getName();
+
+        if (!(jp.getSignature() instanceof MethodSignature)) {
+            LOGGER.warn(&quot;该方法接口无法启用缓存功能: {}&quot;, jp.getSignature().toLongString());
+            return jp.proceed();
+        }
+        MethodSignature methodSign = (MethodSignature) jp.getSignature();
+        Method method = targetClz.getMethod(methodName, methodSign.getParameterTypes());
+        cacheEvictExt = method.getAnnotation(CacheEvictExt.class);
+        if (cacheEvictExt != null) {
+            String cacheKey = CacheKeyUtils
+                    .buildCacheKey(cacheEvictExt.keyExt(), cacheEvictExt.keys(), targetClz, jp.getArgs());
+            cacheApi.evict(cacheKey);
+            // 清除 第二个 key
+            if (cacheEvictExt.secondKeys() == null || cacheEvictExt.secondKeys().length &gt; 0) {
+                String cacheKeyBackUp = CacheKeyUtils
+                        .buildCacheKey(cacheEvictExt.keyExt(), cacheEvictExt.secondKeys(), targetClz, jp.getArgs());
+                cacheApi.evict(cacheKeyBackUp);
+            }
+        }
+        return jp.proceed();
+    }
+
+    public void setCacheApi(CacheApi cacheApi) {
+        this.cacheApi = cacheApi;
+    }
+
+    private static class Blank implements Serializable {
+        private static final long serialVersionUID = 3203712628835590212L;
+        private static final MemcachedExtAop.Blank INST = new MemcachedExtAop.Blank();
+
+        private Blank() {
+        }
+    }
+}
+</code></pre><p>缓存的key的生成方式：</p>
+<p>使用类的全类名，然后加上扩展key解决万一同一个类中缓存的参数一致的问题，然后加上参数名再加上参数值作为key，中间使用下划线拼接。</p>
+<p>多个参数使用方式：keys={“key1”,”key2”,”key3”};</p>
+<p>复杂类型参数使用方式，比如说两个参数，user,address两个参数都是对象，user有userId,phone,address有email，code，使用方式：keys={“userId,phone”,”email,code”};</p>
+<pre><code>package com.cydeer.demo.memcached.annotation;
+
+import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Field;
+import java.util.*;
+
+/**
+ * Created by zhangsong on 16/1/19.
+ */
+public class CacheKeyUtils {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(CacheKeyUtils.class);
+    private static final String UNDER_LINE = &quot;_&quot;;
+    private static final String POINT = &quot;.&quot;;
+
+    /**
+     * 类加方法名的唯一标识
+     *
+     * @param args
+     * @return
+     */
+    public static String buildCacheKey(String keyExt, String[] keys, Class&lt;?&gt; targetClz,
+            Object[] args) {
+        String argsKey = &quot;&quot;;
+        if (args != null) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i &lt; args.length; i++) {
+                Object arg = args[i];
+                // 对于 args 有参数的方法，同时又是JSON生成键值的，必须定义包含的key值因子
+                if (keys.length &lt; 1)
+                    throw new IllegalArgumentException(&quot;请定义 keys 的缓存属性&quot;);
+                if (arg == null) {
+                    sb.append(UNDER_LINE).append(&quot;null&quot;);
+                } else {
+                    if (i &lt; keys.length &amp;&amp; StringUtils.isNotBlank(keys[i])) {
+                        if (isBassClassType(arg.getClass())) {
+                            sb.append(UNDER_LINE).append(String.valueOf(keys[i]));
+                            sb.append(UNDER_LINE).append(String.valueOf(arg));
+                        } else {
+                            Set&lt;String&gt; includeFields = new HashSet&lt;String&gt;(Arrays.asList(StringUtils.split(
+                                    keys[i], &quot;,&quot;)));
+                            Class&lt;?&gt; argClz = arg.getClass();
+                            //对于 Map 或 Collection，不支持
+                            //其他DTO对象排除复杂类型的属性数据
+                            if (!Map.class.isAssignableFrom(argClz) &amp;&amp; !Collection.class.isAssignableFrom(argClz)) {
+                                Field[] argFields = arg.getClass().getDeclaredFields();
+                                for (Field field : argFields) {
+                                    if (!isBassClassType(field.getType())) {
+                                        includeFields.remove(field.getName());
+                                    } else if (includeFields.contains(field.getName())) {
+                                        field.setAccessible(true);
+                                        try {
+                                            sb.append(UNDER_LINE).append(String.valueOf(field.get(arg)));
+                                        } catch (IllegalAccessException e) {
+                                            throw new IllegalArgumentException(&quot;key对应的值获取不到，key:&quot; + field.getName());
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            argsKey = sb.toString();
+            argsKey = StringUtils.removeStart(argsKey, UNDER_LINE);
+        }
+
+        String wholeKey = StringUtils.isEmpty(keyExt) ?
+                StringUtils.join(new String[] { targetClz.getName(), argsKey }, UNDER_LINE) :
+                StringUtils.join(new String[] { targetClz.getName(), keyExt, argsKey }, UNDER_LINE);
+        LOGGER.info(&quot;Cacheable for key : {}&quot;, wholeKey);
+        return wholeKey;
+    }
+
+    private static boolean isBassClassType(Class&lt;?&gt; type) {
+        return ClassUtils.isPrimitiveOrWrapper(type) || type == String.class;
+    }
+}
+</code></pre><p>以及对应的memcached客户端简单封装：</p>
+<p>接口：</p>
+<pre><code>package com.cydeer.demo.memcached.client;
+
+/**
+ * Created by zhangsong on 16/1/19.
+ */
+public interface CacheApi {
+
+    Object get(String key);
+
+    &lt;T&gt; T get(String key, Class&lt;T&gt; type);
+
+    void put(String key, Object value);
+
+    void put(String key, Object value, int expire);
+
+    void evict(String key);
+}
+</code></pre><p>实现：</p>
+<pre><code>package com.cydeer.demo.memcached.client;
+
+import net.spy.memcached.MemcachedClient;
+import net.spy.memcached.internal.OperationFuture;
+
+/**
+ * Created by zhangsong on 16/1/19.
+ */
+public class MemcachedClientExt implements CacheApi {
+
+    /**
+     * 使用net.spy.memcached.MemcachedClient 的客户端
+     */
+    private MemcachedClient client;
+
+    /**
+     * key 的前缀，防止不同应用使用相同的缓存服务器，key重复。
+     */
+    private String keyPrefix;
+
+    private int defaultExpire;
+
+    public MemcachedClientExt(MemcachedClient client, String keyPrefix, int defaultExpire) {
+        this.client = client;
+        this.keyPrefix = keyPrefix + &quot;.&quot;;
+        this.defaultExpire = defaultExpire;
+    }
+
+    @Override public Object get(String key) {
+        return client.get(buildKey(key));
+    }
+
+    @Override public &lt;T&gt; T get(String key, Class&lt;T&gt; type) {
+        Object value = this.get(key);
+        if (value != null &amp;&amp; type != null &amp;&amp; !type.isInstance(value)) {
+            throw new IllegalStateException(&quot;Cached value is not of required type [&quot; + type.getName() + &quot;]: &quot; + value);
+        }
+        return (T) value;
+    }
+
+    @Override public void put(String key, Object value) {
+        this.put(key, value, defaultExpire);
+    }
+
+    @Override public void put(String key, Object value, int expire) {
+        OperationFuture&lt;Boolean&gt; res = client.set(buildKey(key), expire, value);
+        if (res.isDone()) {
+            //System.out.println(&quot;zhaong&quot;);
+        }
+    }
+
+    @Override public void evict(String key) {
+        client.delete(buildKey(key));
+    }
+
+    private String buildKey(String key) {
+        return keyPrefix + key;
+    }
+}
+</code></pre><p>工厂类：</p>
+<pre><code>package com.cydeer.demo.memcached.client;
+
+import net.spy.memcached.AddrUtil;
+import net.spy.memcached.MemcachedClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.StringUtils;
+
+/**
+ * Created by zhangsong on 16/1/19.
+ */
+public class MemcachedClientFactory implements FactoryBean&lt;MemcachedClientExt&gt;, InitializingBean {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(MemcachedClientFactory.class);
+    private MemcachedClientExt memcachedClientExt;
+
+    private String servers;
+    private String keyPrefix;
+    private int defaultExpire;
+    /*private long timeOut;
+    private boolean auth;
+    private String username;
+    private String password;*/
+
+    @Override public MemcachedClientExt getObject() throws Exception {
+        return memcachedClientExt;
+    }
+
+    @Override public Class&lt;?&gt; getObjectType() {
+        return MemcachedClientExt.class;
+    }
+
+    @Override public boolean isSingleton() {
+        return true;
+    }
+
+    @Override public void afterPropertiesSet() throws Exception {
+        if (StringUtils.isEmpty(servers)) {
+            throw new IllegalArgumentException(&quot;No servers set&quot;);
+        }
+        if (StringUtils.isEmpty(keyPrefix)) {
+            throw new IllegalArgumentException(&quot;Please set key prefux&quot;);
+        }
+        if (defaultExpire == 0) {
+            // 过期时间 默认设置为1分钟（60秒）
+            defaultExpire = 60;
+        }
+        MemcachedClient client = new MemcachedClient(AddrUtil.getAddresses(servers));
+        this.memcachedClientExt = new MemcachedClientExt(client, keyPrefix, defaultExpire);
+        LOGGER.info(&quot;MemcachedClientExt has init&quot;);
+    }
+
+    public void setServers(String servers) {
+        this.servers = servers;
+    }
+
+    public void setKeyPrefix(String keyPrefix) {
+        this.keyPrefix = keyPrefix;
+    }
+
+    public void setDefaultExpire(int defaultExpire) {
+        this.defaultExpire = defaultExpire;
+    }
+}
+</code></pre><p>配置文件：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+
+
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd&quot;&gt;
+
+    &lt;!-- 对包中的所有类进行扫描类上的注解，以完成Bean创建和自动依赖注入的功能 需要更改 --&gt;
+    &lt;context:component-scan base-package=&quot;com.cydeer.demo&quot;/&gt;
+    &lt;aop:aspectj-autoproxy/&gt;
+    &lt;bean id=&quot;containerConfProperty&quot;
+          class=&quot;org.springframework.beans.factory.config.PropertyPlaceholderConfigurer&quot;&gt;
+        &lt;!-- 是否忽略不可解析的 --&gt;
+        &lt;property name=&quot;ignoreUnresolvablePlaceholders&quot; value=&quot;true&quot;/&gt;
+        &lt;!-- 多个locations， 单个location &lt;value&gt; --&gt;
+        &lt;property name=&quot;locations&quot;&gt;
+            &lt;list&gt;
+                &lt;value&gt;classpath*:/conf/*.conf&lt;/value&gt;
+            &lt;/list&gt;
+        &lt;/property&gt;
+    &lt;/bean&gt;
+
+    &lt;bean id=&quot;cacheApi&quot; class=&quot;com.cydeer.demo.memcached.client.MemcachedClientFactory&quot;&gt;
+        &lt;property name=&quot;servers&quot; value=&quot;${memcached.api.servers}&quot;/&gt;
+        &lt;property name=&quot;keyPrefix&quot; value=&quot;${app.name}&quot;/&gt;
+    &lt;/bean&gt;
+    &lt;bean id=&quot;cacheAspect&quot; class=&quot;com.cydeer.demo.memcached.aop.MemcachedExtAop&quot;&gt;
+        &lt;property name=&quot;cacheApi&quot; ref=&quot;cacheApi&quot;/&gt;
+    &lt;/bean&gt;
+
+&lt;/beans&gt;    
+</code></pre><p>conf文件：</p>
+<pre><code>app.name=cydeer
+memcached.api.servers=localhost:11211
+</code></pre><p>代码地址（包含测试程序）：<a href="https://github.com/xia-zhou/demo-cydeer.git" target="_blank" rel="external">https://github.com/xia-zhou/demo-cydeer.git</a></p>
+<p>在memcached包下面    </p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

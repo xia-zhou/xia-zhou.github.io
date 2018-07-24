@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Cydeer">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="常用日志查看命令与集群监控命令"/>
+  <meta property="og:description" content="不同的生活， 带来不同的际遇， 福祸好歹， 终会积累成经历的一种， 脚步匆匆， 只是不知下一站会在哪里... 一切只是开始，一切也终将继续" />
+  <meta property="og:site_name" content="下个路口见"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://www.merlin4io.comundefined"/>
+  
+    <link rel="alternate" href="/atom.xml" title="下个路口见" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>下个路口见</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">常用日志查看命令与集群监控命令</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/<your-github-username>">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:<your-email-address>">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By Cydeer</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">9月 5 2016</span>
+            <span class="time">20:27:07</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/日志操作/">#日志操作</a> <a class="tag" href="/tags/系统监控/">#系统监控</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h3 id="查看日志常用命令"><a href="#查看日志常用命令" class="headerlink" title="查看日志常用命令"></a>查看日志常用命令</h3><pre><code>cd、ls、mkdir、rm、rm -rf、cp、mv这些简单的不再多说。
+scp
+    把本机文件settle.war拷贝到远程主机host下的／homt/root下面：
+        scp /home/war/settle.war root@host:/home/root 
+    把远程文件settle.war拷贝到本机，名字为settleLocal.war：
+        scp root@host:/homt/root/settle.war /homt/war/settleLocal.war 
+cat
+    查看文件内容，cat -n  会显示文件的行号。
+    cat命令执行之后不能够再进行交互和控制。对应的分页查看命令more，则可以控制显示下一页，上一页，上一屏，下一屏内容。less还可以使用／关键字进行查找。
+vi
+    编辑文本，也可以查看文本，查找，使用／关键字来查找。编辑完之后可以保存退出，或者直接退出。
+find / -name &apos;&apos;
+tail -n 1000 stmt.log
+    显示末尾1000行
+tail -f stmt.log
+    持续显示日志内容，有新的日志会自动显示。
+head 和 tail类似。
+sort
+    sort -n  按照数字正序排列，sort -n -r  倒序排列
+grep &quot;关键字&quot; stmt.log -A 100 -B 300
+    关键字前100行 后300行
+grep -c &quot;关键字&quot; stmt.log 
+    统计关键字出现的次数
+tar 解压，归档文件使用
+</code></pre><h3 id="系统监控常用命令"><a href="#系统监控常用命令" class="headerlink" title="系统监控常用命令"></a>系统监控常用命令</h3><pre><code>uptime 
+    查看系统负载，每个cpu当前的活动线程数不大于3可以认为是正常的，大于5说明负载已经有点高了，三个数值分别代表1分钟、5分钟、15分钟内的load值。
+top | grep Cpu
+    查看各个cpu的各个时间消耗，cpu的利用率
+top -p 2864
+    查看指定进程
+df -h 
+    按单位格式化输出生育磁盘空间。
+du d 1 -h /hont/root
+    按单位格式化输出文件夹下文件的大小,深度为1
+free -m
+    以兆格式输出内存使用率。
+ping
+    心跳检测
+iostat -d -k
+    查看系统的io情况
+traffic、sar -n DEV 1 1 监测网络。
+talnet 
+    远程连接
+netstat
+    端口使用状态
+ifconfig
+    ip地址
+iptables
+    防火墙
+ps -ef | grep nignix
+    查看进程
+ps -aux | grep tomcat
+    查看进程
+</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

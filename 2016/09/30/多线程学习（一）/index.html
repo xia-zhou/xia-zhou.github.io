@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Cydeer">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="多线程学习（一）"/>
+  <meta property="og:description" content="不同的生活， 带来不同的际遇， 福祸好歹， 终会积累成经历的一种， 脚步匆匆， 只是不知下一站会在哪里... 一切只是开始，一切也终将继续" />
+  <meta property="og:site_name" content="下个路口见"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://www.merlin4io.comundefined"/>
+  
+    <link rel="alternate" href="/atom.xml" title="下个路口见" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>下个路口见</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">多线程学习（一）</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/<your-github-username>">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:<your-email-address>">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By Cydeer</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">9月 30 2016</span>
+            <span class="time">20:27:07</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/线程安全/">#线程安全</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h3 id="多线程技能"><a href="#多线程技能" class="headerlink" title="多线程技能"></a>多线程技能</h3><h4 id="进程和线程"><a href="#进程和线程" class="headerlink" title="进程和线程"></a>进程和线程</h4><p>进程和线程的区别，进程是操作系统级别的，一个操作系统可以有很多进程。线程是进程级别的，一个进程可以有多个线程。进程有独立的运行内存，线程没有，线程之间的内存是共享的。</p>
+<h4 id="实现多线程的方法"><a href="#实现多线程的方法" class="headerlink" title="实现多线程的方法"></a>实现多线程的方法</h4><p> 可以继承Thread类，或者实现Runable接口。推荐实现Runable接口的方式，因为Java是单继承的，继承Thread类之后就不能继承其他的类了，Thread也是实现Runable接口方式来实现多线程的。<br><a id="more"></a></p>
+<h4 id="非线程安全"><a href="#非线程安全" class="headerlink" title="非线程安全"></a>非线程安全</h4><p>多个线程对同一个对象的同一个实例属性的操作，造成数据更新不同步，导致程序运行错误。非线程安全一定涉及到可变的共享变量。没有共享的可变变量就不存在线程安全问题。</p>
+<h4 id="线程的生命周期"><a href="#线程的生命周期" class="headerlink" title="线程的生命周期"></a>线程的生命周期</h4><p> new Thread（），之后线程进入new状态，分配内存。调用start（）方法进入runable状态，获得cpu之后进入running状态，调用wait（）方法进入block状态，调用notify（）方法进入runable状态，运行完进入死亡状态。</p>
+<h4 id="线程的基本方法："><a href="#线程的基本方法：" class="headerlink" title="线程的基本方法："></a>线程的基本方法：</h4><ol>
+<li>Thread.currentThread（），静态方法，获取当前运行的线程。</li>
+<li>isAlive()，判断当前线程是否存活，start()方法调用之后true，调用之前false。</li>
+<li>sleep(long),静态方法，让当前线程进入休息状态，如果有锁，该方法不会释放锁。</li>
+<li>yield(),静态方法，让当前线程放弃cpu，进入runable状态，可能刚放弃cpu就又重新获得cpu。</li>
+</ol>
+<h5 id="interrupted-与isInterrupted"><a href="#interrupted-与isInterrupted" class="headerlink" title="interrupted()与isInterrupted()"></a>interrupted()与isInterrupted()</h5><ol>
+<li>interrupted()方法为静态方法，判断当前线程是否被中断状态，另外调用该方法之后会清楚是否被中断的状态。</li>
+<li>isInterrupted()方法，判断线程是否已经中断。可以在线程run（）方法外使用监控线程运行状态，也可以在run()方法内监控线程运行状态（外部是否发起中断线程命令），然后做相应的操作。</li>
+</ol>
+<h4 id="终止线程"><a href="#终止线程" class="headerlink" title="终止线程"></a>终止线程</h4><ol>
+<li>线程运行完成自动终止。</li>
+<li>异常法终止线程，调用线程的interrupt（）方法（非静态方法），run()方法内部判断线程是否是被中断状态，如果是，就内部抛出异常或者return终止线程。</li>
+<li>sleep()中终止，当调用sleep（） 方法之后 调用线程的interrupt（）方法，就会抛出InterruptedException。终止线程。</li>
+<li>stop（）方法（不推荐用）；</li>
+</ol>
+<h4 id="线程优先级"><a href="#线程优先级" class="headerlink" title="线程优先级"></a>线程优先级</h4><p>线程优先级分为10个状态，1~10,数值越大，优先级越高，优先级高的线程有优先执行的机会，但不一定会优先执行，优先级具有随机性。另外优先级是可以继承的，该继承是指，A线程启动了B线程，则B线程有和A线程相同的优先级。线程的优先级默认为NOMAL的即数值是5。</p>
+<p>守护线程</p>
+<ul>
+<li>使用setDaemon(boolean)方法来设置一个线程是守护线程，守护线程随着最后一个线程的终止而中止，其他所有线程终止了，守护线程立马中止，不会再继续执行剩下的代码。</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Cydeer">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="Java之RMI与zookeeper"/>
+  <meta property="og:description" content="不同的生活， 带来不同的际遇， 福祸好歹， 终会积累成经历的一种， 脚步匆匆， 只是不知下一站会在哪里... 一切只是开始，一切也终将继续" />
+  <meta property="og:site_name" content="下个路口见"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://www.merlin4io.comundefined"/>
+  
+    <link rel="alternate" href="/atom.xml" title="下个路口见" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>下个路口见</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">Java之RMI与zookeeper</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/<your-github-username>">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:<your-email-address>">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By Cydeer</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">11月 10 2016</span>
+            <span class="time">20:27:07</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h3 id="RMI简介"><a href="#RMI简介" class="headerlink" title="RMI简介"></a>RMI简介</h3><p>通过RMI（Remote Method Invocation，远程方法调用）可以实现跨虚拟机调用，A项目和B项目分别在不同的虚拟机上工作，如果要实现A项目可以访问B项目，可以使用RMI来实现。也可以使用其他方式，比如http等，但是RMI的方式要快很多。在分布式系统中，我们更需要这种技术，一个项目提供服务，另一个项目作为消费者来使用提供者提供的服务，充分体现组件之间的弱耦合，系统架构更容易扩展。先简单的说说RMI怎么用吧。</p>
+<h3 id="发布RMI接口"><a href="#发布RMI接口" class="headerlink" title="发布RMI接口"></a>发布RMI接口</h3><p>发布RMI接口需要做什么？</p>
+<ul>
+<li>定义一个 RMI 接口</li>
+<li>编写 RMI 接口的实现类</li>
+<li>通过 JNDI 发布 RMI 服务<a id="more"></a>
+<h4 id="定义RMI接口"><a href="#定义RMI接口" class="headerlink" title="定义RMI接口"></a>定义RMI接口</h4>首先定一个接口继承Remote类。定义方法，方法要抛出RemoteException。</li>
+</ul>
+<p>eg:</p>
+<pre><code>package com.cydeer.demo.rmi.api;
+
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
+/**
+ * Created by zhangsong on 16/8/11.
+ */
+public interface HelloWordService extends Remote {
+    String sayHello(String name) throws RemoteException;
+}
+</code></pre><h4 id="对应的实现类"><a href="#对应的实现类" class="headerlink" title="对应的实现类"></a>对应的实现类</h4><p>然后写接口具体的实现，实现要继承UnicastRemoteObject，然后实现刚才定义的接口。<br>此外，必须提供一个构造器，并且构造器必须抛出 java.rmi.RemoteException 异常。</p>
+<p>eg：</p>
+<pre><code>package com.cydeer.demo.rmi.api;
+
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
+/**
+ * Created by zhangsong on 16/8/11.
+ */
+public class HelloWordServiceImpl extends UnicastRemoteObject implements HelloWordService {
+
+    public HelloWordServiceImpl() throws RemoteException {
+    }
+
+    @Override public String sayHello(String name) throws RemoteException {
+        System.out.println(&quot;hello &quot; + name);
+        return name;        
+    }
+}
+</code></pre><h4 id="通过JNDI发布服务"><a href="#通过JNDI发布服务" class="headerlink" title="通过JNDI发布服务"></a>通过JNDI发布服务</h4><p>发布服务就像http请求一样，有对应的协议，有对应的ip，和对应的端口，以及要访问的资源，RMI的协议是rmi://，然后对应的ip就是发布服务的ip，对应的端口，默认是1099，可以自己设置，使用方式：</p>
+<pre><code>HelloWordService helloWordService = new HelloWordServiceImpl();
+int port = 9088;
+String url = &quot;rmi://localhost:&quot; + port + &quot;/helloWordService&quot;;
+LocateRegistry.createRegistry(port);
+Naming.rebind(url, new HelloWordServiceImpl());
+</code></pre><p>代码放到main方法里面就可以直接用了。LocateRegistry.createRegistry(port);通过jndi注册到注册表，Naming.rebind(url, new HelloWordServiceImpl());把对应的url，和对应实现类做一个绑定。</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

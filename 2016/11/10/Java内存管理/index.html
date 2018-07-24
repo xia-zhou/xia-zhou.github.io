@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Cydeer">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="Java内存管理"/>
+  <meta property="og:description" content="不同的生活， 带来不同的际遇， 福祸好歹， 终会积累成经历的一种， 脚步匆匆， 只是不知下一站会在哪里... 一切只是开始，一切也终将继续" />
+  <meta property="og:site_name" content="下个路口见"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://www.merlin4io.comundefined"/>
+  
+    <link rel="alternate" href="/atom.xml" title="下个路口见" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>下个路口见</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">Java内存管理</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/<your-github-username>">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:<your-email-address>">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By Cydeer</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">11月 10 2016</span>
+            <span class="time">20:27:07</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>随机访问内存，寄存器，处理器，地址总线。<br>地址总线是链接 处理器和内存的桥梁，地址总线控制了寻址范围，内存大小。<br>用户空间，内核空间，内核空间为系统调用而存在，用户空间是除外操作系统之后的应用程序的内存空间。程序只能使用用户空间的数据，不能直接使用内核空间的数据。<br><a id="more"></a></p>
+<h3 id="JVM内存分配"><a href="#JVM内存分配" class="headerlink" title="JVM内存分配"></a>JVM内存分配</h3><ul>
+<li>方法区</li>
+<li>虚拟机栈（java栈，线程栈）</li>
+<li>本地方法区</li>
+<li>java堆</li>
+<li>程序计数器（PC寄存器）</li>
+<li>直接内存（NIO）</li>
+</ul>
+<p>方法区存放 classLoad家在的class文件，class原始信息，数据结构，以及运行时常量池（基本类型的变量和引用类型的引用）。可以通过maxPerm参数设置大小。</p>
+<p>虚拟机栈，又称作java栈，每个线程都会创建一个java栈，每个java栈中有多个栈帧，当线程中调用一个方法，就会在java栈中存放一个栈帧，一个栈帧包括内部变量（局部变量），操作栈，返回值信息。java栈的栈顶为活动的栈帧（方法），当方法在次调用其他的方法就会在栈顶在创建一个新的栈帧，每个栈帧的操作栈只能访问自己自己栈帧的局部变量。java栈的数据是不共享的所以不存在同步锁问题。</p>
+<p>本地方法区和java栈的功能基本相同，只是，调用的是本地方法。</p>
+<p>java堆存放所有对象的实际内容，对象的引用存储在方法区或者java栈中，每个引用占用4个字节。可以通过-Xmx，-Xms设置堆的最大值和最小值。空间的管理有JVM来管理，对象的创建有程序创建，回收由垃圾回收器完成。</p>
+<p>PC寄存器记录了线程当前运行的位置。</p>
+<p>直接内存是java NIO使用的。</p>
+<h3 id="java堆垃圾回收"><a href="#java堆垃圾回收" class="headerlink" title="java堆垃圾回收"></a>java堆垃圾回收</h3><p> java堆中又分区分为 young区，old区，perm区，young区有氛围eden区，s0区，s1区。perm区存储类加载器加载的类对象，节本稳定，不怎么调用GC，但是如果反复加载也会导致perm区满，也会调用FullGC。<br> young区一般为整个堆区的四分之一，s0和s1区总和通常是young区的八分之一。新建的对象一般存储在eden区，当经过几次minorGC之后会有一部分放到s区，s区始终有一个是空余的，当s区满的时候，会检查old区剩余空间，如果剩余空间不足则会调用一次FullGC，如果空间充足则看JVM的配置，会调用一次minorGC，也有可能调用FullGC，然后把s区放不下的放到old区，old区放不下的时候就会调用FullGC。s区不满的时候，如果一些对象满足条件也会放到old区，比如说经过多少次minorGC之后仍然存活的对象。</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

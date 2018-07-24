@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Cydeer">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="消息中间件微扩展"/>
+  <meta property="og:description" content="不同的生活， 带来不同的际遇， 福祸好歹， 终会积累成经历的一种， 脚步匆匆， 只是不知下一站会在哪里... 一切只是开始，一切也终将继续" />
+  <meta property="og:site_name" content="下个路口见"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://www.merlin4io.comundefined"/>
+  
+    <link rel="alternate" href="/atom.xml" title="下个路口见" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>下个路口见</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">消息中间件微扩展</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/<your-github-username>">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:<your-email-address>">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By Cydeer</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">2月 3 2017</span>
+            <span class="time">20:27:07</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h3 id="正常情况下"><a href="#正常情况下" class="headerlink" title="正常情况下"></a>正常情况下</h3><p>提供者：</p>
+<p>构建发送消息template，需要一个mq的连接工厂类，连接工厂类，获取到之后，指定发送的队列的名字。</p>
+<p>消费者：</p>
+<p>一个队列的消费容器中制定对应的mq的连接工厂类，接受消息的队列信息，接收到消息之后的监听器，默认并发的消费数量。</p>
+<h3 id="中间件之后："><a href="#中间件之后：" class="headerlink" title="中间件之后："></a>中间件之后：</h3><p>ActiveMQ中，topic只有在持久订阅（durablesubscription）下是持久化的。存在持久订阅时，每个持久订阅者，都相当于一个持久化的queue的客户端，它会收取所有消息。这种情况下存在两个问题：</p>
+<a id="more"></a>
+<ol>
+<li>同一应用内consumer端负载均衡的问题：同一个应用上的一个持久订阅不能使用多个consumer来共同承担消息处理功能。因为每个都会获取所有消息。queue模式可以解决这个问题，broker端又不能将消息发送到多个应用端。所以，既要发布订阅，又要让消费者分组，这个功能jms规范本身是没有的。</li>
+<li>同一应用内consumer端failover的问题：由于只能使用单个的持久订阅者，如果这个订阅者出错，则应用就无法处理消息了，系统的健壮性不高。</li>
+</ol>
+<p>为了解决这两个问题，ActiveMQ中实现了虚拟Topic的功能。使用起来非常简单。<br>对于消息发布者来说，就是一个正常的Topic，名称以VirtualTopic.开头。例如VirtualTopic.TEST。</p>
+<p>对于消息接收端来说，是个队列，不同应用里使用不同的前缀作为队列的名称，即可表明自己的身份即可实现消费端应用分组。例如Consumer.A.VirtualTopic.TEST，说明它是名称为A的消费端，同理Consumer.B.VirtualTopic.TEST说明是一个名称为B的客户端。可以在同一个应用里使用多个consumer消费此queue，则可以实现上面两个功能。又因为不同应用使用的queue名称不同（前缀不同），所以不同的应用中都可以接收到全部的消息。每个客户端相当于一个持久订阅者，而且这个客户端可以使用多个消费者共同来承担消费任务。</p>
+<h5 id="发送方"><a href="#发送方" class="headerlink" title="发送方"></a>发送方</h5><p>如果是TOPIC消息,会向TOPIC的VirtualTopic.xiazhou 发送消息，可以在后台的TOPIC页面中看到</p>
+<h5 id="接收者"><a href="#接收者" class="headerlink" title="接收者"></a>接收者</h5><p>启动的时候会生成一个Consumer.wechat.VirtualTopic.xiazhou 中间的wechat是消费者应用</p>
+<h5 id="MQ做的"><a href="#MQ做的" class="headerlink" title="MQ做的"></a>MQ做的</h5><p>当收到 VirtualTopic.xiazhou 消息，先去找有多少Consumer.XXXXX.VirtualTopic.xiazhou的队列<br>把这条消息拷贝N份，放到每个队列里面</p>
+<h5 id="接收者-1"><a href="#接收者-1" class="headerlink" title="接收者"></a>接收者</h5><p>消费自己注册的队列里面的数据，如果有4台，随机分发，保证了集群4台收一份数据</p>
+<h4 id="提供者："><a href="#提供者：" class="headerlink" title="提供者："></a>提供者：</h4><ol>
+<li>使用方发送topic消息到newOrder主题。</li>
+<li>提供者定一个事件，事件中指定了主题名字，然后通过messageEventFactory的publishEvent方法，发布事件。</li>
+<li>发布事件中，根据主题名字加上分区信息，构建出来一个新的主题名字。然后获取对应的mq的连接工厂， 使用连接工厂获得连接，根据连接获取会话，根据会话构建一个提供者，提供者提供的事主题消息，然后使用提供者发送主题消息。</li>
+<li>提供者封装后发送消息到VirtualTopic.newOrder.</li>
+</ol>
+<h4 id="消费者："><a href="#消费者：" class="headerlink" title="消费者："></a>消费者：</h4><ol>
+<li>使用方监听newOrder主题。</li>
+<li>一开始获取到所有的自定义的消费者监听器，消费者监听器中指定了可以并发消费的数量，指定了消费的分组方式，默认消费分组为系统名称。</li>
+<li>获取所有的消费者自定义监听器，遍历，然后按照主题名字和消费分组组装成一个key，把key和对应的listener放到一个map中。然后使用连接工厂获取一个mq连接，然后启动连接。遍历前面的map，根据key获取到对应的listener，根据连接，获取一个session会话。</li>
+<li>然后根据消费分组，主题名称，分区信息，创建一个队列，然后回话根据队列构建出一个消费者，然后设置消费者对应的监听器，这个监听器事动态构建的，监听这个队列，当有消息到这个队列的时候，出发这个动态的监听器，动态的监听器会调用我们自定义的监听器的对应处理消息方法。</li>
+<li>封装后每个消费者都会注册监听器到Consumer.appName.VirtualTopic.xiazhou队列。有消息发送到VirtualTopic.newOrder主题的，监听在Consumer.*.VirtualTopic.xiazhou队列的消费者都会受到消息。</li>
+</ol>
+<h4 id="依赖点："><a href="#依赖点：" class="headerlink" title="依赖点："></a>依赖点：</h4><p>消费者需要先发布，创建好对应的消费队列，然后发送主题消息之后才会分到对应的消费队列中去,也就是发送主题消息之前所有的消费者队列需要已经创建。不然会有消息丢失问题。</p>
+<h4 id="扩展点："><a href="#扩展点：" class="headerlink" title="扩展点："></a>扩展点：</h4><p>可以对消息添加版本的概念，然后不同的版本消息会发送到与版本相关的主题，然后队列页时不同的版本，这样解决发布依赖问题，如果发布的过程中想要测试，这样会很方便。</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

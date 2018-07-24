@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Cydeer">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="多线程学习（三）之线程间通信"/>
+  <meta property="og:description" content="不同的生活， 带来不同的际遇， 福祸好歹， 终会积累成经历的一种， 脚步匆匆， 只是不知下一站会在哪里... 一切只是开始，一切也终将继续" />
+  <meta property="og:site_name" content="下个路口见"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://www.merlin4io.comundefined"/>
+  
+    <link rel="alternate" href="/atom.xml" title="下个路口见" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>下个路口见</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">多线程学习（三）之线程间通信</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/<your-github-username>">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:<your-email-address>">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By Cydeer</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">10月 2 2016</span>
+            <span class="time">20:27:07</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/线程通信/">#线程通信</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h3 id="等待／通知机制"><a href="#等待／通知机制" class="headerlink" title="等待／通知机制"></a>等待／通知机制</h3><p>多个线程之间如果没有等待／通知机制，那么多线程的通信就会很麻烦，比如说，两个线程A，B。A、B异步执行，但是在某个关键点，B线程要等待A线程某个关键点执行完才能继续执行，没有等待／通知机制，那么B线程只能一只循环检测A线程的关键点是否已经执行完成，就需要一直轮训。但是有了等待，通知机制，就可以不用去轮训，在关键点判断是否能够往下执行，不能久等待，A执行完关键点，发出通知就行了。<br><a id="more"></a></p>
+<h3 id="wait-notify-notifyAll"><a href="#wait-notify-notifyAll" class="headerlink" title="wait(),notify(),notifyAll()"></a>wait(),notify(),notifyAll()</h3><p>三个方法调用之前都要先获得锁，不然会抛出IllegalMonitorStateException异常。wait(),notify(),之间的锁钥匙同一把锁才会有效。wait()方法调用之后，释放锁，进入阻塞block状态，notify（）方法调用之后，会把锁控制范围的代码执行完之后释放锁，其他调用wait()导致阻塞的线程才能获得锁。</p>
+<p>nofity（）只会随机通知其中一个线程，notifyAll（）会通知所有线程，前提是，这些线程在竞争同一把锁，这下线程调用了wait()方法处于阻塞状态。<br>wait(long),等待long时间之后自动唤醒。唤醒之后进入runable状态，等待cpu。</p>
+<h3 id="join"><a href="#join" class="headerlink" title="join()"></a>join()</h3><p>join()方法会等待等待内部线程结束之后外面的线程才结束，join（） 和sleep可以实现类似的功能，但实现方式不同，join()实现方式为wait（），notify（）方式，所以join会释放锁，但是sleep方式，不会释放锁。</p>
+<h3 id="ThreadLocal"><a href="#ThreadLocal" class="headerlink" title="ThreadLocal"></a>ThreadLocal</h3><p>关于ThreadLocal可以查看其面的一篇<a href="http://www.merlin4io.com/2016/08/23/ThreadLocal%E5%88%9D%E4%BD%93%E9%AA%8C/">http://www.merlin4io.com/2016/08/23/ThreadLocal%E5%88%9D%E4%BD%93%E9%AA%8C/</a></p>
+<h3 id="ReentrantLock"><a href="#ReentrantLock" class="headerlink" title="ReentrantLock"></a>ReentrantLock</h3><p>可以实现synchronized类似的功能。</p>
+<p>lock.lock()获取锁，lock.unlock(),使用lock的好处就是可以更精确的控制，哪些时候wait（），具体什么情况发出通知，wait的时候首先获取condition，然后调用condition.await(),通知的时候调用condition.signal(),同一个所下面可以控制具体什么情况wait（），什么情况signal（），更精确的通知具体的线程。</p>
+<p>ReentrantReadWriteLock，读写互斥，读异步。写和其他的都互斥。使用方法<br>lock.readLock.lock();<br>lock.writeLock.lock();</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+
