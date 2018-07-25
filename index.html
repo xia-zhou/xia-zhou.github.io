@@ -82,7 +82,7 @@
   <div class="post-excerpt">
     <!-- Post Date and Categories -->
     <div class="date-and-category">
-      <div class="date">7月 24 2018</div>
+      <div class="date">2018年7月24日</div>
       <div class="categories">
         
           
@@ -93,7 +93,7 @@
       </div>
     </div>
     <!-- Post Excerpt -->
-    <div class="excerpt typo"><p>负载均衡常用算法有：轮询，加权轮训，随机，加权随机，源地址hash，最小连接数。<br></p></div>
+    <div class="excerpt typo"><p>负载均衡,指由多台服务器组成一个服务器集群,每台服务器都具有等价的地位,可以单独对外提供服务,无需互相之间协调,负载均衡就是把外部的请求,均匀的分配到集群中的某一台服务器上,而收到请求的服务器,处理请求,并返回对应的结果.负载均衡可以分担服务器压力,提供服务器的性能,解决大量兵法访问服务问题.这种集群技术可以用最少的资源获得接近大型主机的性能.,负载均衡有很多的算法,常用的有以下几种:轮询算法,加权轮询算法,随机算法,加权随机算法,源地址哈希算法,最小连接数算法.<br></p></div>
     <!-- Post Tags -->
     <div class="tags">
       
@@ -115,7 +115,7 @@
   <div class="post-excerpt">
     <!-- Post Date and Categories -->
     <div class="date-and-category">
-      <div class="date">12月 7 2017</div>
+      <div class="date">2017年12月7日</div>
       <div class="categories">
         
           瞎编乱造
@@ -145,7 +145,7 @@
   <div class="post-excerpt">
     <!-- Post Date and Categories -->
     <div class="date-and-category">
-      <div class="date">11月 27 2017</div>
+      <div class="date">2017年11月27日</div>
       <div class="categories">
         
           瞎编乱造
@@ -171,7 +171,7 @@
   <div class="post-excerpt">
     <!-- Post Date and Categories -->
     <div class="date-and-category">
-      <div class="date">9月 11 2017</div>
+      <div class="date">2017年9月11日</div>
       <div class="categories">
         
           瞎编乱造
@@ -197,7 +197,7 @@
   <div class="post-excerpt">
     <!-- Post Date and Categories -->
     <div class="date-and-category">
-      <div class="date">8月 30 2017</div>
+      <div class="date">2017年8月30日</div>
       <div class="categories">
         
           瞎编乱造
@@ -223,7 +223,7 @@
   <div class="post-excerpt">
     <!-- Post Date and Categories -->
     <div class="date-and-category">
-      <div class="date">8月 28 2017</div>
+      <div class="date">2017年8月28日</div>
       <div class="categories">
         
           瞎编乱造
@@ -247,6 +247,121 @@
 <li>接入层缓存</li>
 <li>应用层缓存</li>
 <li>分布式缓存</li></ul></li></ol></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        <div class="untagged">Java</div>
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2017/06/27/Mybaties主从数据库扩展/" class="post-title">
+      Mybaties主从数据库扩展
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">2017年6月27日</div>
+      <div class="categories">
+        
+          瞎编乱造
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><p>mybaties，扩展主从读写分离。</p>
+<p><img src="/2017/06/27/Mybaties主从数据库扩展/WechatIMG56.jpeg" alt=""></p>
+<p>首先扩展DataSource : RoutingDataSource extends AbstractDataSource 设置主从数据库DataSource。然后重写getConnection方法，根据条件获取具体使用哪一个数据源，是主库master，还是从库（多个从库可以考虑从库的负载策略），比如说如果是有事务就需要选择主库，如果没有从库就选择主库，等等。这个地方的是否开启事务，以及使用者自己定义的主从库信息通过线程变量来获取。<br></p></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        <div class="untagged">Java</div>
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2017/05/15/简单谈谈对HashMap的理解/" class="post-title">
+      简单谈谈对HashMap的理解
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">2017年5月15日</div>
+      <div class="categories">
+        
+          瞎编乱造
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h2 id="HashMap的原理"><a href="#HashMap的原理" class="headerlink" title="HashMap的原理"></a>HashMap的原理</h2><p>HashMap的原理是Hash。使用put(key,value)的方式存储数据，使用get(key)获取数据。put的时候对key做hash算法，决定放到那个buket里面，map的底层实现是一个entry链表的数组。put的时候如果发生hash冲突，会对比key的equals方法，返回true，覆盖，返回false，则存放到entry链表中。当元素的数量大于初始值的0.75时，会扩充为原来的两倍大小。扩充会有线程安全问题，扩充之后，会把原来的元素重新hash存储。hashMap的大小最好时2的幂次方，这样的好处是，扩容方便，直接移位即可，另外存放获取的时候效率会高一点，因为每个key做hash之后要和map的大小做&amp;确定key存储在哪一个buket上面。<br></p></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        <div class="untagged">Java</div>
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2017/04/12/Kafka到logstash到elasticsearch到kinana/" class="post-title">
+      Kafka到logstash到elasticsearch到kinana
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">2017年4月12日</div>
+      <div class="categories">
+        
+          瞎编乱造
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h2 id="下载地址"><a href="#下载地址" class="headerlink" title="下载地址"></a>下载地址</h2><p>zookeeper: <a href="https://zookeeper.apache.org/releases.html" target="_blank" rel="external">https://zookeeper.apache.org/releases.html</a>    最新版走起。</p>
+<p>文档地址： <a href="https://zookeeper.apache.org/doc/r3.5.2-alpha/zookeeperStarted.html" target="_blank" rel="external">https://zookeeper.apache.org/doc/r3.5.2-alpha/zookeeperStarted.html</a> 够详细了，创建conf文件，启动，命令行连接。</p>
+<p>kafka：<a href="http://kafka.apache.org/downloads" target="_blank" rel="external">http://kafka.apache.org/downloads</a> 最新版的搞起.</p>
+<p>文档地址：<a href="http://kafka.apache.org/quickstart" target="_blank" rel="external">http://kafka.apache.org/quickstart</a> 一步一步往前走。</p>
+<p>elasticsearch :<a href="https://www.elastic.co/cn/downloads/elasticsearch" target="_blank" rel="external">https://www.elastic.co/cn/downloads/elasticsearch</a> 最新版然后启动命令什么的都有。</p>
+<p>详细文档地址：<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/getting-started.html" target="_blank" rel="external">https://www.elastic.co/guide/en/elasticsearch/reference/current/getting-started.html</a></p>
+<p>kibana:<a href="https://www.elastic.co/cn/downloads/kibana" target="_blank" rel="external">https://www.elastic.co/cn/downloads/kibana</a></p>
+<p>详细文档地址： <a href="https://www.elastic.co/guide/en/kibana/current/getting-started.html" target="_blank" rel="external">https://www.elastic.co/guide/en/kibana/current/getting-started.html</a></p>
+<p>logstash:<a href="https://www.elastic.co/cn/downloads/logstash" target="_blank" rel="external">https://www.elastic.co/cn/downloads/logstash</a></p>
+<p>详细文档地址：<a href="https://www.elastic.co/guide/en/logstash/current/getting-started-with-logstash.html" target="_blank" rel="external">https://www.elastic.co/guide/en/logstash/current/getting-started-with-logstash.html</a><br></p></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        <div class="untagged">Java</div>
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2017/03/13/性能优化之字符串操作/" class="post-title">
+      性能优化之字符串操作
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">2017年3月13日</div>
+      <div class="categories">
+        
+          瞎编乱造
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo">暂无文章摘要</div>
     <!-- Post Tags -->
     <div class="tags">
       

@@ -76,13 +76,13 @@
     <div class="col-lg-10 col-md-10 col-md-offset-1">
       
         <div class="post-item-wrapper">
-  <a href="/2016/11/10/Java内存管理/" class="post-title">
-      Java内存管理
+  <a href="/2016/09/05/常用日志查看命令与集群监控命令/" class="post-title">
+      常用日志查看命令与集群监控命令
   </a>
   <div class="post-excerpt">
     <!-- Post Date and Categories -->
     <div class="date-and-category">
-      <div class="date">11月 10 2016</div>
+      <div class="date">2016年9月5日</div>
       <div class="categories">
         
           瞎编乱造
@@ -90,11 +90,15 @@
       </div>
     </div>
     <!-- Post Excerpt -->
-    <div class="excerpt typo"><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>随机访问内存，寄存器，处理器，地址总线。<br>地址总线是链接 处理器和内存的桥梁，地址总线控制了寻址范围，内存大小。<br>用户空间，内核空间，内核空间为系统调用而存在，用户空间是除外操作系统之后的应用程序的内存空间。程序只能使用用户空间的数据，不能直接使用内核空间的数据。<br></p></div>
+    <div class="excerpt typo">暂无文章摘要</div>
     <!-- Post Tags -->
     <div class="tags">
       
-        <div class="untagged">Java</div>
+        
+
+<a class="tag" href="/tags/日志操作/">日志操作</a> <a class="tag" href="/tags/系统监控/">系统监控</a>
+
+
       
     </div>
   </div>
@@ -102,13 +106,153 @@
 
       
         <div class="post-item-wrapper">
-  <a href="/2016/11/10/统一权限管理系统设计/" class="post-title">
-      统一权限管理系统设计
+  <a href="/2016/09/05/Memcached缓存小记/" class="post-title">
+      Memcached缓存小记
   </a>
   <div class="post-excerpt">
     <!-- Post Date and Categories -->
     <div class="date-and-category">
-      <div class="date">11月 10 2016</div>
+      <div class="date">2016年9月5日</div>
+      <div class="categories">
+        
+          瞎编乱造
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h3 id="为什么用缓存？"><a href="#为什么用缓存？" class="headerlink" title="为什么用缓存？"></a>为什么用缓存？</h3><p>为什么用缓存？什么情况下用缓存？<br>    当对数据的读取很频繁，数据又不经常变化，数据库压力比较大的情况下，使用缓存可以很好的解决问题。缓存有多重，有本地缓存（ehcached），但线程缓存（redis），分布式缓存（memcached），各有各的优势，各有各的适用范围，比如说小系统，单机模式，本地缓存足够了，不用考虑多台机子之间的同步，使用成本也低。再大一点可以使用redis，redis的数据类型比较广泛，有String,list,map,set,集合类型数据，redis本身会做压缩，占用的内存会比较小。<br></p></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/Memcached/">Memcached</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2016/08/23/ThreadLocal初体验/" class="post-title">
+      ThreadLocal初体验
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">2016年8月23日</div>
+      <div class="categories">
+        
+          瞎编乱造
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><p>网络上有很多关于ThreadLocal的介绍，有很多介绍使用场景，使用方法，以及源码的文章。这里只是简单的介绍一下。</p>
+<h3 id="ThreadLocal的定义"><a href="#ThreadLocal的定义" class="headerlink" title="ThreadLocal的定义"></a>ThreadLocal的定义</h3><p>ThreadLocal为变量在每个线程中都创建一个副本，所以每个线程只能访问自己内部的副本变量。在自己的线程内部共享，不同线程之间不会互相干扰。ThreadLocal是为了保证线程范围内的共享数据而生。<br>ThreadLocal提供了一种访问某个变量的特殊方式：访问到的变量属于当前线程，即保证每个线程的变量不一样，而同一个线程在任何地方都可以拿到这个线程变量，这就是所谓的线程隔离。<br>如果要使用ThreadLocal，通常定义为private static类型，最好是定义为private static final类型。<br></p></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/Java/">Java</a> <a class="tag" href="/tags/ThreadLocal/">ThreadLocal</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2016/08/21/Java设计模式之单例/" class="post-title">
+      Java设计模式之单例
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">2016年8月21日</div>
+      <div class="categories">
+        
+          瞎编乱造
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><p>接触Java的第一个设计模式大多数人都是单例，但是如果写一个完美的单例却不是随手拈来的事，要考虑的事情还是有的。</p>
+<p>第一个版本：</p>
+<p>最简单,但是 可能会耗费性能,不需要的时候其实不用创建（特别是创建需要分配较大内存的时候）</p>
+<pre><code>/**
+ * Created by zhangsong on 16/6/8.
+ * &lt;p&gt;
+ * 最简单,但是 可能会耗费性能,不需要的时候其实不用创建
+ */
+public class Singleton {
+    private final static Singleton instance = new Singleton();
+
+    private Singleton() {
+
+    }
+
+    public static Singleton getInstance() {
+        return instance;
+    }
+}
+</code></pre></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/Java/">Java</a> <a class="tag" href="/tags/设计模式/">设计模式</a> <a class="tag" href="/tags/单例/">单例</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2016/08/21/Java实现Callback/" class="post-title">
+      Java实现Callback
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">2016年8月21日</div>
+      <div class="categories">
+        
+          瞎编乱造
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><p>Callback(回调)，在不侵入别人代码的情况下实现别人功能完成以后执行自己的代码，可以分为同步回调和一部回调。<br>同步回调一般会有回调的返回结果，调用的方法和回调返回参数一样。异步调用一般会在方法内新启线程来执行业务逻辑。<br></p></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/Java/">Java</a> <a class="tag" href="/tags/Callback/">Callback</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2016/08/14/Hexo-使用指南/" class="post-title">
+      Hexo 使用指南
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">2016年8月14日</div>
       <div class="categories">
         
           瞎编乱造
@@ -128,13 +272,13 @@
 
       
         <div class="post-item-wrapper">
-  <a href="/2016/10/15/使用Mysql构建系统唯一标识/" class="post-title">
-      使用Mysql构建系统唯一标识
+  <a href="/2016/08/14/Zookeeper-学习笔记（一）/" class="post-title">
+      Zookeeper 学习笔记（一）
   </a>
   <div class="post-excerpt">
     <!-- Post Date and Categories -->
     <div class="date-and-category">
-      <div class="date">10月 15 2016</div>
+      <div class="date">2016年8月14日</div>
       <div class="categories">
         
           瞎编乱造
@@ -147,101 +291,6 @@
     <div class="tags">
       
         <div class="untagged">Java</div>
-      
-    </div>
-  </div>
-</div>
-
-      
-        <div class="post-item-wrapper">
-  <a href="/2016/10/09/Groovy脚本初体验/" class="post-title">
-      Groovy脚本初体验
-  </a>
-  <div class="post-excerpt">
-    <!-- Post Date and Categories -->
-    <div class="date-and-category">
-      <div class="date">10月 9 2016</div>
-      <div class="categories">
-        
-          瞎编乱造
-        
-      </div>
-    </div>
-    <!-- Post Excerpt -->
-    <div class="excerpt typo">暂无文章摘要</div>
-    <!-- Post Tags -->
-    <div class="tags">
-      
-        
-
-<a class="tag" href="/tags/Groovy/">Groovy</a> <a class="tag" href="/tags/脚本/">脚本</a>
-
-
-      
-    </div>
-  </div>
-</div>
-
-      
-        <div class="post-item-wrapper">
-  <a href="/2016/10/02/多线程学习（三）之线程间通信/" class="post-title">
-      多线程学习（三）之线程间通信
-  </a>
-  <div class="post-excerpt">
-    <!-- Post Date and Categories -->
-    <div class="date-and-category">
-      <div class="date">10月 2 2016</div>
-      <div class="categories">
-        
-          瞎编乱造
-        
-      </div>
-    </div>
-    <!-- Post Excerpt -->
-    <div class="excerpt typo"><h3 id="等待／通知机制"><a href="#等待／通知机制" class="headerlink" title="等待／通知机制"></a>等待／通知机制</h3><p>多个线程之间如果没有等待／通知机制，那么多线程的通信就会很麻烦，比如说，两个线程A，B。A、B异步执行，但是在某个关键点，B线程要等待A线程某个关键点执行完才能继续执行，没有等待／通知机制，那么B线程只能一只循环检测A线程的关键点是否已经执行完成，就需要一直轮训。但是有了等待，通知机制，就可以不用去轮训，在关键点判断是否能够往下执行，不能久等待，A执行完关键点，发出通知就行了。<br></p></div>
-    <!-- Post Tags -->
-    <div class="tags">
-      
-        
-
-<a class="tag" href="/tags/线程通信/">线程通信</a>
-
-
-      
-    </div>
-  </div>
-</div>
-
-      
-        <div class="post-item-wrapper">
-  <a href="/2016/10/02/多线程学习（二）/" class="post-title">
-      多线程学习（二）
-  </a>
-  <div class="post-excerpt">
-    <!-- Post Date and Categories -->
-    <div class="date-and-category">
-      <div class="date">10月 2 2016</div>
-      <div class="categories">
-        
-          瞎编乱造
-        
-      </div>
-    </div>
-    <!-- Post Excerpt -->
-    <div class="excerpt typo"><h2 id="共享变量的并发访问"><a href="#共享变量的并发访问" class="headerlink" title="共享变量的并发访问"></a>共享变量的并发访问</h2><h3 id="synchronized同步方法"><a href="#synchronized同步方法" class="headerlink" title="synchronized同步方法"></a>synchronized同步方法</h3><ul>
-<li>方法内部的变量为线程安全变量</li>
-<li>实例变量为非线程安全变量</li>
-</ul>
-<p>同一个类的synchronized同步方法的锁事对象锁，是当前对象实例。</p>
-<p>类A中有synchronized方法methodA（）和 非同步方法methodB(),则一个线程调用类A实例a的methodA()的同时，其他线程可以调用非同步方法methodB（）。多个线程多个类A的实例a,b,c,则多个线程可以异步调用a.methodA(),b.methodA(),c.methodA(),但同时只能有一个线程调用a.methodA(),因为synchronized方法为对象锁，不同的对象不同的锁。<br></p></div>
-    <!-- Post Tags -->
-    <div class="tags">
-      
-        
-
-<a class="tag" href="/tags/synchronized/">synchronized</a> <a class="tag" href="/tags/volatile/">volatile</a>
-
-
       
     </div>
   </div>
@@ -265,13 +314,6 @@
                 </a>
               </li>
           
-          
-            <li class="next">
-              <a href="/page/5/">
-                <span>下一页</span>
-                <span class="symbol-right">&gt;</span>
-              </a>
-            </li>
           
       </ul>
     </div>
