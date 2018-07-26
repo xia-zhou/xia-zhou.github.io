@@ -8,10 +8,10 @@
   <meta name="description" content="">
   <meta name="author" content="Cydeer">
   <!-- Open Graph Data -->
-  <meta property="og:title" content="Redis哨兵模式配置"/>
+  <meta property="og:title" content="下个路口见"/>
   <meta property="og:description" content="不同的生活,带来不同的际遇,福祸好歹,终会积累成经历的一种,脚步匆匆,只是不知下一站会在哪里... 一切只是开始,一切也终将继续" />
   <meta property="og:site_name" content="下个路口见"/>
-  <meta property="og:type" content="article" />
+  <meta property="og:type" content="website" />
   <meta property="og:image" content="http://www.merlin4io.comundefined"/>
   
   
@@ -33,7 +33,8 @@
 </head>
 
   <body>
-    <!-- Page Header -->
+    <!-- Archive Header -->
+<!-- Page Header -->
 
 
 <header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
@@ -41,7 +42,7 @@
     <div class="row">
       <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
         <div class="page-title with-background-image">
-          <p class="title">Redis哨兵模式配置</p>
+          <p class="title">Blog Archives</p>
           <p class="subtitle"></p>
         </div>
         <div class="site-menu with-background-image">
@@ -70,39 +71,34 @@
   </div>
 </header>
 
-<article>
-  <div class="container typo">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        <div class="post-info text-muted">
-          
-            <!-- Author -->
-            <span class="author info">By Cydeer</span>
-          
-          <!-- Date -->
-          <span class="date-time info">On
-            <span class="date">2017年11月27日</span>
-            <span class="time">23:50:26</span>
-          </span>
-          
-        </div>
-        <!-- Tags -->
-        
-        <!-- Post Main Content -->
-        <div class="post-content">
-          <p>安装reids之后启动检测redis安装是否成功。</p>
-<p>修改redis.conf文件，bind 127.0.0.1不需要配置密码。</p>
-<p>copy redis.conf 文件，修改端口，设置bind 127.0.0.1 设置slaveof 127.0.0.1 6379</p>
-<p>copy redis.conf 文件，修改端口，设置bind 127.0.0.1 设置slaveof 127.0.0.1 6379</p>
-<p>配置redis_sentinel.conf文件，监听同一个master<br>port 26379<br>daemonize yes<br>protected-mode no<br>sentinel monitor dazi_master 127.0.0.1 6379 2</p>
-<p>copy 修改port 26380其他不修改<br>port 26380<br>daemonize yes<br>protected-mode no<br>sentinel monitor dazi_master 127.0.0.1 6379 2</p>
-<p>copy 修改port 26381其他不修改<br>port 26381<br>daemonize yes<br>protected-mode no<br>sentinel monitor dazi_master 127.0.0.1 6379 2</p>
+<!-- Archive List -->
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      
+        <div class="archive-item">
+  <a href="/2018/07/26/JVM内存管理机制/" class="post-title">
+    JVM内存管理机制
+  </a>
+  <div class="date text-muted">Posted on 2018年7月26日 18:58:21</div>
+</div>
 
-        </div>
-      </div>
+      
+
     </div>
   </div>
-</article>
+</div>
+<!-- Pagination -->
+<div class="container">
+  <div class="row">
+    <div class="col-lg-10 col-md-10 col-md-offset-1">
+      <ul class="pagination">
+          
+          
+      </ul>
+    </div>
+  </div>
+</div>
 
 
 
