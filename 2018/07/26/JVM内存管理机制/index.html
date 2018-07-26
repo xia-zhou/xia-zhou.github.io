@@ -82,7 +82,7 @@
           <!-- Date -->
           <span class="date-time info">On
             <span class="date">2018年7月26日</span>
-            <span class="time">23:50:26</span>
+            <span class="time">23:54:39</span>
           </span>
           
           <!--  Categories  -->
@@ -105,7 +105,7 @@
         <!-- Post Main Content -->
         <div class="post-content">
           <p>Java代码是要运行在虚拟机上的,而虚拟机在执行Java程序的过程中会把所管理的内存划分为若干个不同的数据区域,这些区域都有各自的用途,其中有些区域随着虚拟机进程的启动而存在,有些区域则依赖用户线程的启动和结束而建立和销毁.JVM内存结构主要分为五个部分,方法区(Java8之后改为元空间),堆区,虚拟机栈,本地方法栈,程序计数器.其中方法区和堆区是所有线程共享的数据区,虚拟机栈,本地方法栈,程序计数器为线程隔离的数据区.<br><a id="more"></a></p>
-<h3 id="JVM内存结构图"><a href="#JVM内存结构图" class="headerlink" title="JVM内存结构图"></a>JVM内存结构图</h3><p><img src="/2018/07/26/JVM内存管理机制/2018-07-26-JVM内存管理机制/JVM内存结构图.jpeg" alt="JVM内存结构图"></p>
+<h3 id="JVM内存结构图"><a href="#JVM内存结构图" class="headerlink" title="JVM内存结构图"></a>JVM内存结构图</h3><p><img src="/2018/07/26/JVM内存管理机制/JVM内存结构图.jpeg" alt="JVM内存结构图"></p>
 <h3 id="PC寄存器-程序计数器"><a href="#PC寄存器-程序计数器" class="headerlink" title="PC寄存器(程序计数器)"></a>PC寄存器(程序计数器)</h3><p><strong>程序计数器</strong>（Program Counter Register）也叫PC寄存器,是当前线程所执行的字节码的行号指示器.字节码解释器工作时就是通过改变这个计数器的值来选取下一条需要执行的字节码指令,分支、循环、跳转、异常处理、线程恢复等基础功能都需要依赖这个计数器来完成.每条线程都需要有一个独立的程序计数器.</p>
 <p>如果线程正在执行的是一个Java方法,这个计数器记录的是正在执行的虚拟机字节码指令的地址;如果正在执行的是Native方法,这个计数器值则为空（Undefined）.此内存区域是唯一一个在Java虚拟机规范中没有规定任何OutOfMemoryError情况的区域.</p>
 <h3 id="Java虚拟机栈"><a href="#Java虚拟机栈" class="headerlink" title="Java虚拟机栈"></a>Java虚拟机栈</h3><p><strong>Java虚拟机栈</strong>（Java Virtual Machine Stacks）也是线程私有的,它的生命周期与线程相同.虚拟机栈描述的是Java方法执行的内存模型:每个方法在执行的同时都会创建一个栈帧（Stack  Frame [1] ）用于存储局部变量表、操作数栈、动态链接、方法出口等信息.每一个方法从调用直至执行完成的过程,就对应着一个栈帧在虚拟机栈中入栈到出栈的过程.</p>
