@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Cydeer">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="JVM共享内存结构以及内存分配策略"/>
+  <meta property="og:description" content="不同的生活,带来不同的际遇,福祸好歹,终会积累成经历的一种,脚步匆匆,只是不知下一站会在哪里... 一切只是开始,一切也终将继续" />
+  <meta property="og:site_name" content="下个路口见"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://www.merlin4io.comundefined"/>
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>下个路口见</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">JVM共享内存结构以及内存分配策略</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By Cydeer</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">2018年7月27日</span>
+            <span class="time">22:37:25</span>
+          </span>
+          
+          <!--  Categories  -->
+            <span class="categories info">Under 
+
+<a href="/categories/JVM系列/">JVM系列</a>
+</span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/JVM/">#JVM</a> <a class="tag" href="/tags/内存分配策略/">#内存分配策略</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <p>JVM内存区分总体可以分为五个部分,具体可以参考上一篇 <a href="/2018-07-26-JVM内存结构分析">JVM内存结构分析</a>.但是通常情况下,JVM内存主要以线程共享内存和单程独享内存来作区分,上一篇也讲过,JVM五个区域中,堆区和方法区都属于线程共享区域,而程序计数器,虚拟机栈,本地方法栈为线程独享区域.如下图所示:<br><img src="/2018/07/27/JVM共享内存结构以及内存分配策略/JVM共享内存分配图.jpg" alt="JVM共享内存分配图"><br><a id="more"></a></p>
+<h2 id="对象优先分配在线程的本地分配缓冲区"><a href="#对象优先分配在线程的本地分配缓冲区" class="headerlink" title="对象优先分配在线程的本地分配缓冲区"></a>对象优先分配在线程的本地分配缓冲区</h2><p>在前面我们提到，每个线程可以在堆中预先分配得到一片区域，作为本地线程分配缓冲区（TLAB）。当该线程执行时，有对象创建的话，就在该线程的TLAB中分配内存。当该线程的TLAB用完了才申请堆中的空闲内存。</p>
+<pre><code>二：堆中优先分配Eden
+
+大多数情况下，对象都在新生代的Eden区中分配内存。而因为大部分的对象都是“朝生夕死”的，所以新生代又会频繁进行垃圾回收。
+
+三：大对象直接进入老年代
+
+需要大量连续空间的对象，如：长字符串、数组等，会直接在老年代分配内存。这是因为，这样可以避免在新生代区频繁的GC时发生大量的内存赋值（新生代的GC是采用复制算法的）。
+
+四：长期存活的对象“晋入”老年代
+
+新生代中经历了多次GC仍然存活的对象，当年龄达到一定程度（默认15）时就会晋升到老年代。
+
+为了更好地适应内存情况，虚拟机不是要求对象必须到达阀值才可晋升老年代的，而是采用动态年龄判定的方法：如果Servivor空间中相同年龄的对象大小大于Servivor空间的一般时，由于下一次的MinorGC时，这些对象如果仍然存活的话，复制到ToServivor空间时就放不下了。所以，在本次GC时就可以把这些对象以及年龄大于等于这些对象的直接进入老年代。
+
+在MinorGC时，如果Eden和FromServivor中存活的对象在复制到ToServivor时放不下了，也会直接分配到老年代。
+
+五：空间分配担保
+
+在MinorGC之前，会先检查老年代最大可用空间是否可以容纳新生代所有对象（防止新生代全部晋升时放不下），如果可以容纳，则MinorGC可以安全执行。否则，检查是否允许担保失败，是则检查老年代最大可用空间是否大于历次晋升到老年代的对象的平均大小，是则尝试进行MinorGC；小于或者MinorGC失败，则会发起一次FullGC清理老年代。
+</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

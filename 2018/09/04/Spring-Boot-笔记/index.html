@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Cydeer">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="Spring Boot 笔记"/>
+  <meta property="og:description" content="不同的生活,带来不同的际遇,福祸好歹,终会积累成经历的一种,脚步匆匆,只是不知下一站会在哪里... 一切只是开始,一切也终将继续" />
+  <meta property="og:site_name" content="下个路口见"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://www.merlin4io.comundefined"/>
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>下个路口见</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">Spring Boot 笔记</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By Cydeer</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">2018年9月4日</span>
+            <span class="time">22:37:25</span>
+          </span>
+          
+          <!--  Categories  -->
+            <span class="categories info">Under 
+
+<a href="/categories/杂七杂八/">杂七杂八</a>
+</span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/Spring-Boot/">#Spring Boot</a> <a class="tag" href="/tags/异常处理/">#异常处理</a> <a class="tag" href="/tags/统一异常/">#统一异常</a> <a class="tag" href="/tags/Spring常用注解/">#Spring常用注解</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <p>项目中一直在用Spring Boot,只是一直没有做系统的学习,各方面的使用都有涉及,但是不全面,这两天看到了一个比较全的博客,但是分了二十多篇,感觉有点冗杂,于是,想自己做一份记录,方便后面的查看.所以,这篇文章出现在了这里,记录比较简单.不喜勿喷.下面的内容会首先构建一个最小的可运行demo,一步一步添加内容.<br><a id="more"></a></p>
+<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>可以在项目结构中的resources下面看到application.properties文件,该文件作为项目的配置文件,一些通用配置可以配置在这里,比如项目名称等着里只是放置各个环境通用,无隐私信息(用户名,密码,ip相关).当然配置文件也可以放置到其他位置,下面来罗列可以放置的位置以及生效的优先级.排在前面的优先级越高,不过一般情况下我们不会这么做.</p>
+<ol>
+<li>当前目录下的一个/config子目录</li>
+<li>当前目录</li>
+<li>一个classpath下的/config包</li>
+<li>classpath根路径（root）</li>
+</ol>
+<p>一些常用的配置如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">#端口配置：</div><div class="line">server.port=8090</div><div class="line">#时间格式化</div><div class="line">spring.jackson.date-format=yyyy-MM-dd HH:mm:ss</div></pre></td></tr></table></figure>
+<p>配置文件中可以定义一些随机说,范围值:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cydeer.number=$&#123;random.int&#125;</div><div class="line">cydeer.number.less.than.ten=$&#123;random.int(10)&#125;</div><div class="line">cydeer.number.in.range=$&#123;random.int[1024,65536]&#125;</div></pre></td></tr></table></figure>
+<p>使用的时候可以通过注解:<strong>@Value(value = “${cydeer.number}”)</strong>来使用,也可以使用<br><strong>@ConfigurationProperties(<br>    prefix = “cydeer.user”<br>)</strong> 来注入一系列属性到bean中.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">cydeer.user.id=64</div><div class="line">cydeer.user.name=Cydeer</div><div class="line">cydeer.user.hobby[0]=看电影</div><div class="line">cydeer.user.hobby[1]=旅游</div></pre></td></tr></table></figure>
+<p>配置文件还可以使用YAML方式,该方式的可读性更高,官方推荐使用该方式,使用该种方式需要注意:</p>
+<ol>
+<li>注意写法,冒号后面要加个空格</li>
+<li>该方式不能够和@PropertySource(自定义配置文件位置)一起使用</li>
+<li>相同前缀的key需要配置在一起.</li>
+<li>多环境支持只需要一个配置文件</li>
+</ol>
+<h4 id="多环境支持"><a href="#多环境支持" class="headerlink" title="多环境支持"></a>多环境支持</h4><p>application-{profile}.properties，{profile}对应你的环境标识,新建文件到resources文件夹下面即可,如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">application-dev.properties：开发环境</div><div class="line">application-test.properties：测试环境</div><div class="line">application-pre.properties：预发环境</div><div class="line">application-prod.properties：生产环境</div></pre></td></tr></table></figure>
+<p>启用对应环境配置文件的方式有以下三种:</p>
+<ol>
+<li>在application.properties配置spring.profiles.active为对应 <strong>${profile}</strong>即可比如:spring.profiles.active=dev,则启用了开发环境</li>
+<li>命令行方式激活不同环境配置 <strong>java -jar xxx.jar –spring.profiles.active=dev</strong></li>
+<li>jvm参数重配置 <strong>java -Dspring.profiles.active=dev -jar xxx.jar</strong></li>
+</ol>
+<h3 id="日志文件"><a href="#日志文件" class="headerlink" title="日志文件"></a>日志文件</h3><p>推荐使用logback.<br>spring boot默认会加载classpath:logback-spring.xml<br>application-${profile}.properties中可以指定日志级别,那些包下面的日志的输出级别.<br>logging.level.com.cydeer.core=info:com.cydeer.core包下所有class高于info级别的都会输出.<br>logging.level.org.springframework=WARN:org.springframework包下的class高于WARN级别输出.<br>还可以配置日志的目录,或者文件<br>logging.path=./logs<br>logging.file=my.log</p>
+<h3 id="常用注解"><a href="#常用注解" class="headerlink" title="常用注解"></a>常用注解</h3><ol>
+<li>@SpringBootApplication此注解是个组合注解，包括了@SpringBootConfiguration、@EnableAutoConfiguration和@ComponentScan注解。</li>
+<li>@SpringBootConfiguration 继承至@Configuration，对于熟悉spring的开发者而言，此标注当前类是配置类，并会将当前类内声明的一个或多个以@Bean注解标记的方法的实例纳入到srping容器中，并且实例名就是方法名。</li>
+<li>@EnableAutoConfiguration 这个注解就是springboot能自动进行配置的魔法所在了。主要是通过此注解，能所有符合自动配置条件的bean的定义加载到spring容器中，比如根据spring-boot-starter-web ，来判断你的项目是否需要添加了webmvc和tomcat，就会自动的帮你配置web项目中所需要的默认配置.</li>
+<li>@ComponentScan 这个熟悉spring的开发者也应该熟悉，会扫描当前包及其子包下被@Component，@Controller，@Service，@Repository等注解标记的类并纳入到spring容器中进行管理。</li>
+<li>@RestController 是Spring4之后加入的注解，原来在@Controller中返回json需要@ResponseBody来配合，如果直接用@RestController替代@Controller就不需要再配置@ResponseBody，默认返回json格式。而@Controller是用来创建处理http请求的对象，一般结合@RequestMapping使用。</li>
+<li>@RequestMapping,@RequestBody,@PathVariable、@RequestParam、@RequestAttribute@Component、@Service、@Repository</li>
+</ol>
+<h3 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h3><p>在项目中,请求处理过程中,出现异常是经常出现的,有的时候我们会在系统内容定义统一异常,通过该种方式,可以快速的中断流程,还有一些异常情况是未知的,比如说数据库连接失败异常,等等,这些异常一般情况下都是不应该返回给系统之外的,如果系统提供API的话,一般还会有固定的数据格式,突然给别人一个异常,给别人的感觉就是这个网站(服务端)很 low,调用方也会很懵逼的.所以一般系统中都会做一个异常捕获或者二次处理转化.</p>
+<p>统一异常一般分为两种情况,使用运行时异常或者受检异常,各有各的好处,运行时异常使用起来方便,调用房不需要处理,交给对外统一异常拦截来处理,该种方式的缺点是,如果处理流程是异步处理的,那么异步代码块就需要在外层添加一个异常处理逻辑(这一部分往往很多人会遗忘,因为是非受检异常).受检异常的优点是,外部调用者明确知道该方法可能会有异常,而且必须处理异常,这是该种方式的优点,同样也是缺点,很多情况下都是,捕获到这种异常,然后就直接抛出去了,每个调用的地方都需要来处理.</p>
+<p>Spring Boot中异常情况下默认会跳转值/error请求进行错误的展现,根据不同的Content-Type展现不同的错误结果,如json请求时,直接返回json格式参数.</p>
+<p>我们可以自定义错误页面,方式如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">@Controller</div><div class="line">@RequestMapping(value = &quot;error&quot;)</div><div class="line">public class BaseErrorController implements ErrorController &#123;</div><div class="line">private static final Logger logger = LoggerFactory.getLogger(BaseErrorController.class);</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public String getErrorPath() &#123;</div><div class="line">		logger.info(&quot;出错啦！进入自定义错误控制器&quot;);</div><div class="line">		return &quot;error/error&quot;;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	@RequestMapping</div><div class="line">	public String error() &#123;</div><div class="line">		return getErrorPath();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>也可以通过添加自定义错误页面</p>
+<ol>
+<li>html静态页面:放到resources/public/error/ 即可,<blockquote>
+<p> 如添加404页面:resources/public/error/404.html,<br> 503页面:resources/public/error/503.html.</p>
+</blockquote>
+</li>
+<li>模版引擎页面:在templates/error/下定义<blockquote>
+<p>如添加5xx页面： templates/error/5xx.ftl</p>
+</blockquote>
+</li>
+</ol>
+<p>注意：templates/error/ 这个的优先级比较 resources/public/error/高</p>
+<p>也可以通过注解@ControllerAdvice统一异常处理</p>
+<p>@ExceptionHandler 可以指定对应的异常处理方式<br>@ResponseStatus控制这种异常的返回状态码是什么</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line">	 * 统一异常处理</div><div class="line">	 * </div><div class="line">	 * @param exception</div><div class="line">	 *            exception</div><div class="line">	 * @return</div><div class="line">	 */</div><div class="line">	@ExceptionHandler(&#123; RuntimeException.class &#125;)</div><div class="line">	@ResponseStatus(HttpStatus.OK)</div><div class="line">	public ModelAndView processException(RuntimeException exception) &#123;</div><div class="line">		logger.info(&quot;自定义异常处理-RuntimeException&quot;);</div><div class="line">		ModelAndView m = new ModelAndView();</div><div class="line">		m.addObject(&quot;roncooException&quot;, exception.getMessage());</div><div class="line">		m.setViewName(&quot;error/500&quot;);</div><div class="line">		return m;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 统一异常处理</div><div class="line">	 * </div><div class="line">	 * @param exception</div><div class="line">	 *            exception</div><div class="line">	 * @return</div><div class="line">	 */</div><div class="line">	@ExceptionHandler(&#123; Exception.class &#125;)</div><div class="line">	@ResponseStatus(HttpStatus.OK)</div><div class="line">	public ModelAndView processException(Exception exception) &#123;</div><div class="line">		logger.info(&quot;自定义异常处理-Exception&quot;);</div><div class="line">		ModelAndView m = new ModelAndView();</div><div class="line">		m.addObject(&quot;roncooException&quot;, exception.getMessage());</div><div class="line">		m.setViewName(&quot;error/500&quot;);</div><div class="line">		return m;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+
