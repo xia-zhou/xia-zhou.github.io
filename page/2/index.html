@@ -76,6 +76,75 @@
     <div class="col-lg-10 col-md-10 col-md-offset-1">
       
         <div class="post-item-wrapper">
+  <a href="/2017/08/28/亿级流量目录/" class="post-title">
+      亿级流量大纲摘要
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">2017年8月28日</div>
+      <div class="categories">
+        
+          瞎编乱造
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><p>交易型系统的一些基本原则</p>
+<h3 id="高并发"><a href="#高并发" class="headerlink" title="高并发"></a>高并发</h3><ol>
+<li>无状态：代码无状态，可以快速回滚，扩容。</li>
+<li>拆分：服务垂直拆分</li>
+<li>服务化</li>
+<li>消息队列（异步处理），大流量缓冲，最后数据校对（防止消息丢失）</li>
+<li>数据异构（分库分表之后，数据异构，数据聚合之后异构，可以通过es实现）</li>
+<li>并行化（统一请求的不同资源获取，可以并行处理，提高效率）</li>
+<li><p>缓存</p>
+<ul>
+<li>浏览器缓存</li>
+<li>app客户端缓存</li>
+<li>cdn缓存</li>
+<li>接入层缓存</li>
+<li>应用层缓存</li>
+<li>分布式缓存</li></ul></li></ol></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        <div class="untagged">Java</div>
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2017/06/27/Mybaties主从数据库扩展/" class="post-title">
+      Mybaties主从数据库扩展
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">2017年6月27日</div>
+      <div class="categories">
+        
+          瞎编乱造
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><p>mybaties，扩展主从读写分离。</p>
+<p><img src="/2017/06/27/Mybaties主从数据库扩展/WechatIMG56.jpeg" alt=""></p>
+<p>首先扩展DataSource : RoutingDataSource extends AbstractDataSource 设置主从数据库DataSource。然后重写getConnection方法，根据条件获取具体使用哪一个数据源，是主库master，还是从库（多个从库可以考虑从库的负载策略），比如说如果是有事务就需要选择主库，如果没有从库就选择主库，等等。这个地方的是否开启事务，以及使用者自己定义的主从库信息通过线程变量来获取。<br></p></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        <div class="untagged">Java</div>
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
   <a href="/2017/05/15/简单谈谈对HashMap的理解/" class="post-title">
       简单谈谈对HashMap的理解
   </a>
@@ -291,65 +360,6 @@
     </div>
     <!-- Post Excerpt -->
     <div class="excerpt typo"><h3 id="信号量（Semaphore）"><a href="#信号量（Semaphore）" class="headerlink" title="信号量（Semaphore）"></a>信号量（Semaphore）</h3><p>控制线程并发的数量。主要限制并发线程的数量，如果不限制并发线程的数量则CPU的资源会很快会被耗尽，每个线程执行的任务是相当缓慢，因为CPU要把时间片分配给不同的线程对象，而且上下文的切换也要耗时，最终导致系统运行效率降低，所以，控制并发线程的数量是必要的。<br></p></div>
-    <!-- Post Tags -->
-    <div class="tags">
-      
-        <div class="untagged">Java</div>
-      
-    </div>
-  </div>
-</div>
-
-      
-        <div class="post-item-wrapper">
-  <a href="/2016/11/10/多线程之线程池/" class="post-title">
-      多线程之线程池
-  </a>
-  <div class="post-excerpt">
-    <!-- Post Date and Categories -->
-    <div class="date-and-category">
-      <div class="date">2016年11月10日</div>
-      <div class="categories">
-        
-          瞎编乱造
-        
-      </div>
-    </div>
-    <!-- Post Excerpt -->
-    <div class="excerpt typo"><h3 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h3><p>Executor: void execute(Runnable command);提交任务。</p>
-<p>ExecutorService，继承Executor:</p>
-<ol>
-<li>void shutdown();拒绝接受新任务，会把队列里面的任务也执行掉，如果任务中有中断判断是可以中断的，否则执行完。</li>
-<li>List<runnable> shutdownNow();拒绝接受新任务，返回没有执行的任务列表，如果任务中有中断判断，是可以中断的，否则就执行完。</runnable></li>
-<li>Future<t> submit(Callable<t>); 提交一个有返回值的任务，submit的任务不能够被remove。</t></t></li>
-<li>List<future<t>&gt; invokeAll(Collection&lt;? extends Callable<t>&gt; tasks);当所有的订单任务都执行完成才会返回，里面的任何一个定时任务出现异常都会抛出异常，并且中断。</t></future<t></li>
-<li>T invokeAny(Collection&lt;? extends Callable<t>&gt; tasks);当有一个执行完成就会返回，但是其他的任务会照常执行，除非里面有中断判断，可以中断，否则都会执行完。如果有异常，会跳过，执行下一个，如果最后都有异常，则抛出最后一个的异常。</t></li></ol></div>
-    <!-- Post Tags -->
-    <div class="tags">
-      
-        <div class="untagged">Java</div>
-      
-    </div>
-  </div>
-</div>
-
-      
-        <div class="post-item-wrapper">
-  <a href="/2016/11/10/Java内存管理/" class="post-title">
-      Java内存管理
-  </a>
-  <div class="post-excerpt">
-    <!-- Post Date and Categories -->
-    <div class="date-and-category">
-      <div class="date">2016年11月10日</div>
-      <div class="categories">
-        
-          瞎编乱造
-        
-      </div>
-    </div>
-    <!-- Post Excerpt -->
-    <div class="excerpt typo"><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>随机访问内存，寄存器，处理器，地址总线。<br>地址总线是链接 处理器和内存的桥梁，地址总线控制了寻址范围，内存大小。<br>用户空间，内核空间，内核空间为系统调用而存在，用户空间是除外操作系统之后的应用程序的内存空间。程序只能使用用户空间的数据，不能直接使用内核空间的数据。<br></p></div>
     <!-- Post Tags -->
     <div class="tags">
       

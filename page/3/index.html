@@ -76,6 +76,65 @@
     <div class="col-lg-10 col-md-10 col-md-offset-1">
       
         <div class="post-item-wrapper">
+  <a href="/2016/11/10/多线程之线程池/" class="post-title">
+      多线程之线程池
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">2016年11月10日</div>
+      <div class="categories">
+        
+          瞎编乱造
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h3 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h3><p>Executor: void execute(Runnable command);提交任务。</p>
+<p>ExecutorService，继承Executor:</p>
+<ol>
+<li>void shutdown();拒绝接受新任务，会把队列里面的任务也执行掉，如果任务中有中断判断是可以中断的，否则执行完。</li>
+<li>List<runnable> shutdownNow();拒绝接受新任务，返回没有执行的任务列表，如果任务中有中断判断，是可以中断的，否则就执行完。</runnable></li>
+<li>Future<t> submit(Callable<t>); 提交一个有返回值的任务，submit的任务不能够被remove。</t></t></li>
+<li>List<future<t>&gt; invokeAll(Collection&lt;? extends Callable<t>&gt; tasks);当所有的订单任务都执行完成才会返回，里面的任何一个定时任务出现异常都会抛出异常，并且中断。</t></future<t></li>
+<li>T invokeAny(Collection&lt;? extends Callable<t>&gt; tasks);当有一个执行完成就会返回，但是其他的任务会照常执行，除非里面有中断判断，可以中断，否则都会执行完。如果有异常，会跳过，执行下一个，如果最后都有异常，则抛出最后一个的异常。</t></li></ol></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        <div class="untagged">Java</div>
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
+  <a href="/2016/11/10/Java内存管理/" class="post-title">
+      Java内存管理
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">2016年11月10日</div>
+      <div class="categories">
+        
+          瞎编乱造
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>随机访问内存，寄存器，处理器，地址总线。<br>地址总线是链接 处理器和内存的桥梁，地址总线控制了寻址范围，内存大小。<br>用户空间，内核空间，内核空间为系统调用而存在，用户空间是除外操作系统之后的应用程序的内存空间。程序只能使用用户空间的数据，不能直接使用内核空间的数据。<br></p></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        <div class="untagged">Java</div>
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
   <a href="/2016/11/10/统一权限管理系统设计/" class="post-title">
       统一权限管理系统设计
   </a>
@@ -301,63 +360,6 @@
     <div class="tags">
       
         <div class="untagged">Java</div>
-      
-    </div>
-  </div>
-</div>
-
-      
-        <div class="post-item-wrapper">
-  <a href="/2016/09/11/Spring源码学习（一）/" class="post-title">
-      Spring源码学习（一）
-  </a>
-  <div class="post-excerpt">
-    <!-- Post Date and Categories -->
-    <div class="date-and-category">
-      <div class="date">2016年9月11日</div>
-      <div class="categories">
-        
-          瞎编乱造
-        
-      </div>
-    </div>
-    <!-- Post Excerpt -->
-    <div class="excerpt typo">暂无文章摘要</div>
-    <!-- Post Tags -->
-    <div class="tags">
-      
-        <div class="untagged">Java</div>
-      
-    </div>
-  </div>
-</div>
-
-      
-        <div class="post-item-wrapper">
-  <a href="/2016/09/06/分布式锁之数据库实现/" class="post-title">
-      分布式锁之数据库实现
-  </a>
-  <div class="post-excerpt">
-    <!-- Post Date and Categories -->
-    <div class="date-and-category">
-      <div class="date">2016年9月6日</div>
-      <div class="categories">
-        
-          瞎编乱造
-        
-      </div>
-    </div>
-    <!-- Post Excerpt -->
-    <div class="excerpt typo"><h3 id="分布式锁和集群锁，什么是分布式锁？"><a href="#分布式锁和集群锁，什么是分布式锁？" class="headerlink" title="分布式锁和集群锁，什么是分布式锁？"></a>分布式锁和集群锁，什么是分布式锁？</h3><p>分布式锁是在分布式系统将常用到的，为了解决分布式系统之间资源访问冲突问题的。简单来说就是为了解决资源访问冲突的，或者是防止并发执行的。分布式锁的实现方式都是在一个公共的地方存一个标志代表一把锁，谁先存储成功，谁就获得锁，自己的程序之行结束之后释放锁，没有获得锁的可以直接失败，或者等待锁。分布式锁，和集群锁在我看来没有太大区别，要解决的问题一样，解决问题的方式也大致相同。</p>
-<p>实现分布式锁的方式有很多种，可以用redis，memcached，zookeeper，数据库等来实现，今天简单的来说说试用数据库实现分布式锁，但是这种方式不常用，或者说基本不用（因为用数据库作为公共资源锁比较重，另外如果用也只是用做集群锁，分布式锁，用这个来实现，还是比较累的）。<br></p></div>
-    <!-- Post Tags -->
-    <div class="tags">
-      
-        
-
-<a class="tag" href="/tags/集群锁/">集群锁</a> <a class="tag" href="/tags/分布式锁/">分布式锁</a> <a class="tag" href="/tags/OneByOne/">OneByOne</a>
-
-
       
     </div>
   </div>
