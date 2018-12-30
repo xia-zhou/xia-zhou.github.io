@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Cydeer">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="JMS&amp;AMQP"/>
+  <meta property="og:description" content="不同的生活,带来不同的际遇,福祸好歹,终会积累成经历的一种,脚步匆匆,只是不知下一站会在哪里... 一切只是开始,一切也终将继续" />
+  <meta property="og:site_name" content="下个路口见"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://www.merlin4io.comundefined"/>
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>下个路口见</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">JMS&amp;AMQP</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By Cydeer</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">2018年12月28日</span>
+            <span class="time">13:36:19</span>
+          </span>
+          
+          <!--  Categories  -->
+            <span class="categories info">Under 
+
+<a href="/categories/杂七杂八/">杂七杂八</a>
+</span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/消息队列/">#消息队列</a> <a class="tag" href="/tags/JMS/">#JMS</a> <a class="tag" href="/tags/AMQP/">#AMQP</a> <a class="tag" href="/tags/消息协议/">#消息协议</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <p>从事IT工作的人对“协议”肯定都不陌生，最开始接触到的应该是HTTP协议，然后有TCP，IP协议等，HTTP中的P全称是Protocol就是协议的意思，协议是什么？协议是一种规范，是一种达成一致的一种规则，需要不同的计算机之间共同完成一件事情的时候就肯定会有协议的存在。就像人与人之间的合作一样，也是有这种规则，协议存在的，只是我们通常情况下不太关注而已。消息协议则是指用于实现消息队列功能时所涉及到的协议，按照是否想行业开放消息的规范文档，可以分为开放协议和私有协议，常见的开放协议有AMQP，MQTT，STOMP等，有些特殊框架如Redis，根据自身需要为严格遵循MQ规范，而是基于TCP/IP自行封装了一套协议，实现了MQ的功能。<br><a id="more"></a></p>
+<h3 id="JMS"><a href="#JMS" class="headerlink" title="JMS"></a>JMS</h3><p>JMS的全称为Java Message Service即Java消息服务应用程序接口，是Java平台面向消息中间件的一套规范的Java API接口，用于两个应用程序之间或分布式系统中发送消息，进行异步通信。JMS不是一个消息协议,JMS的存在类似于JDBC，提供了接口规范，实现了该接口的消息队列可以无缝切换，JMS是属于Java的一个东西，对应的消息队列中渐渐提供客户端的时候实现了该接口，因此可以说JMS不支持跨语言，跨平台。JMS把消息队列抽象为两种模型，分别是点对点模式和发布订阅模式。</p>
+<h4 id="点对点模型"><a href="#点对点模型" class="headerlink" title="点对点模型"></a>点对点模型</h4><p>点对点（point-to-point）模型中，每一条消息都有一个发送者和接受者，当消息代理得到消息时，它将消息放入到一个队列中，当接收者请求队列中的下一条消息时，消息会从消息队列中取出，并投递给接收者，消息投递后会从队列中删除，这就保证了每一条消息只能投递给一个接收者。消息生产者把消息放到队列里面，消息消费者去队列里面获取消息，消息只能被消费一次，可以简单的理解为，你（消息生产者）写（生产）信（消息）给一个朋友，邮递员（消息代理）把信放到你朋友家的邮筒里（消息队列），你朋友（消息消费者）把信取出来去阅读（处理）。这个过程就是一种点对点模型的例子。点对点模型需要三个内容，消息生产者，消息队列，消息消费者。消息生产者和消息消费者之间的关联是通过消息队列产生的（也可以认为两者没有关联）。<br>点对点模型中，消息生产者可以是单机，也可以是集群，他们使用的是同一个队列，同样的，消息消费者也可以是单机或者集群，支持集群情况下，也只会是集群中的某一台主机可以消费该消息。<br><img src="/2018/12/28/JMS-AMQP/mq-point-to-point.png" alt=""><br>点对点模型使用的场景为，应用和应用之间是一对一的关系，也就是说一个应用生产的消息，只有一个应用关注（因为消息只能被消费一次）。</p>
+<h4 id="发布-订阅模型"><a href="#发布-订阅模型" class="headerlink" title="发布/订阅模型"></a>发布/订阅模型</h4><p>发布-订阅模型（publish-subscribe）中，消息会发送给一个主题，与队列类似，多个接收者可以监听同一个主题，但是和队列不同的是，每个监听者都可以拿到消息的副本，分别来处理。发布订阅模型的参与者也是三个，消息发布者，主题，消息订阅者，三者之间通过主题关联。消息发布者发布消息到主题，订阅者监听主题，分别拿到相同的消息去处理。该种模式类似于设计模式中的观察者模式。<br><img src="/2018/12/28/JMS-AMQP/mq-publisher-subscribe.png" alt=""><br>发布订阅模型的使用场景较多，应用和应用之间是一对多的关系，比如A应用发布一个消息，B应用，C应用，D应用，可能都关注该消息，都需要根据该消息做对应的处理。</p>
+<h4 id="JMS存在的问题"><a href="#JMS存在的问题" class="headerlink" title="JMS存在的问题"></a>JMS存在的问题</h4><p>发布订阅模式下，能否实现订阅者负载均衡消费呢？当发布者消息量很大时，显然单个订阅者的处理能力是不足的。实际上现实场景中是多个订阅者节点组成一个订阅组负载均衡消费topic消息即分组订阅， 这样订阅者很容易实现消费能力线性扩展。<br><img src="/2018/12/28/JMS-AMQP/mq-publisher-subscribe-question.png" alt=""><br>该如何解决这个问题呢？具体要看对应消息队列的实现，像ActiveMQ,有一个虚拟主题的实现，就可以解决这个问题，具体请参考<a href="消息中间件微扩展.md">消息中间件微扩展</a></p>
+<h3 id="AMQP"><a href="#AMQP" class="headerlink" title="AMQP"></a>AMQP</h3><p>AMQP(Advanced Message Queue Protocol)高级消息队列协议，AMQP是一种协议，协议的内容分为三个部分：基本概念、功能命令和传输层协议。基本概念是指，AMQP内部定义的各组件以及组件功能的介绍。功能指令是该协议定义的一系列命令，应用程序可以使用这些命令实现业务功能。传输层协议是网络级协议，定了数据的传输格式，其中包括数据帧处理，信道复用，内容编码，心跳检测，错误处理等。</p>
+<h4 id="AMQP没有明确的点对点模型和发布订阅模型，那么AMQP是怎么实现消息路由的呢？"><a href="#AMQP没有明确的点对点模型和发布订阅模型，那么AMQP是怎么实现消息路由的呢？" class="headerlink" title="AMQP没有明确的点对点模型和发布订阅模型，那么AMQP是怎么实现消息路由的呢？"></a>AMQP没有明确的点对点模型和发布订阅模型，那么AMQP是怎么实现消息路由的呢？</h4><p>AMQP和普通的MQ流程有些不同，中间添加了Exchange（交换器）和Binding（绑定）。消息生产者的消息由Exchange接收并且将这些消息路由到队列中。路由的规则是有Binding来做的，Binding负责交换器和消息队列之间的关联，一个绑定就是基于路由键将交换器和消息队链接起来的路由规则，可以认为交换器就是一个由绑定构成的路由表。具体的功能有具体的消息队列来实现，后面会有单独的文章介绍JMS的实现和AMQP的实现具体的使用方式。</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

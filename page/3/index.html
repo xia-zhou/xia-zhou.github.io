@@ -76,6 +76,32 @@
     <div class="col-lg-10 col-md-10 col-md-offset-1">
       
         <div class="post-item-wrapper">
+  <a href="/2016/11/10/多线程之concurrent包/" class="post-title">
+      多线程之concurrent包
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">2016年11月10日</div>
+      <div class="categories">
+        
+          瞎编乱造
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h3 id="信号量（Semaphore）"><a href="#信号量（Semaphore）" class="headerlink" title="信号量（Semaphore）"></a>信号量（Semaphore）</h3><p>控制线程并发的数量。主要限制并发线程的数量，如果不限制并发线程的数量则CPU的资源会很快会被耗尽，每个线程执行的任务是相当缓慢，因为CPU要把时间片分配给不同的线程对象，而且上下文的切换也要耗时，最终导致系统运行效率降低，所以，控制并发线程的数量是必要的。<br></p></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        <div class="untagged">Java</div>
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
   <a href="/2016/11/10/多线程之线程池/" class="post-title">
       多线程之线程池
   </a>
@@ -328,34 +354,6 @@
     </div>
     <!-- Post Excerpt -->
     <div class="excerpt typo">暂无文章摘要</div>
-    <!-- Post Tags -->
-    <div class="tags">
-      
-        <div class="untagged">Java</div>
-      
-    </div>
-  </div>
-</div>
-
-      
-        <div class="post-item-wrapper">
-  <a href="/2016/09/30/定时任务管理系统设计/" class="post-title">
-      定时任务管理系统设计
-  </a>
-  <div class="post-excerpt">
-    <!-- Post Date and Categories -->
-    <div class="date-and-category">
-      <div class="date">2016年9月30日</div>
-      <div class="categories">
-        
-          瞎编乱造
-        
-      </div>
-    </div>
-    <!-- Post Excerpt -->
-    <div class="excerpt typo"><h3 id="为什么需要定时任务？"><a href="#为什么需要定时任务？" class="headerlink" title="为什么需要定时任务？"></a>为什么需要定时任务？</h3><p>业务系统需要自动完成一些工作，定时处理一些业务，比如说，订单7天未支付自动关闭，月底统计订单数据量，每天统计用户增长量等，涉及到需要系统自动完成的，不需要人为操作的，都可以用定时任务来做，或者说，人为来做比较麻烦的。</p>
-<h3 id="什么情况下定时任务需要管理？"><a href="#什么情况下定时任务需要管理？" class="headerlink" title="什么情况下定时任务需要管理？"></a>什么情况下定时任务需要管理？</h3><p>当你只有一个系统的时候，可能不需要一个系统来管理你的定时任务，你可能自己系统来管理就行了，或者说，你系统的定时任务很少，自己管理就足够了。</p>
-<p>但是通常情况下，因为涉及到定时任务，需要确定，如果定时任务没有执行，是否需要手动触发，如果定时任务涉及外部数据的时候，执行失败，当修复好外部数据之后，是否需要重新发起执行，这就涉及到，你的定时任务是否都需要一个外部入口，手动调用。这样的话，因为系统不能随时发布重新调整cron表达式，重新执行，所以我们需要来管理。当然这里说的定时任务时通过spring的Scheduled注解来实现的方式的定时任务，如果你的实现方式是其他类型的定时任务，可以思考下面的方法是否能够通用。<br></p></div>
     <!-- Post Tags -->
     <div class="tags">
       

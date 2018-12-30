@@ -76,6 +76,32 @@
     <div class="col-lg-10 col-md-10 col-md-offset-1">
       
         <div class="post-item-wrapper">
+  <a href="/2017/08/30/Curator之LeaderLatch使用/" class="post-title">
+      Curator之LeaderLatch使用
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">2017年8月30日</div>
+      <div class="categories">
+        
+          瞎编乱造
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><h3 id="背景简介"><a href="#背景简介" class="headerlink" title="背景简介"></a>背景简介</h3><p>Zookeeper在分布式系统中，常常被用于选主。在执行某个任务时，让所有的节点都知道有一个特别的，唯一的节点是任务的主节点，由主节点进行任务的执行，其他节点作为备用节点。通过这种热备方式，为分布式系统中任务执行的可控性，以及系统高可用性。<br>作为zookeeper的高级api封装库curator选主算法主要有以下两个：Leader Latch和Leader Election今天简单的介绍一下Leader Latch。<br>LeaderLatch的方式，就是以一种抢占的方式来决定选主。比较简单粗暴，逻辑相对简单。类似非公平锁的抢占，所以，多节点是一个随机产生主节点的过程。基本就是，谁抢到就算谁的。<br>多个参与者（如：逻辑节点；某个线程等），指定在一个分组之下，每个分组内进行主节点抢占。<br></p></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        <div class="untagged">Java</div>
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
   <a href="/2017/08/28/亿级流量目录/" class="post-title">
       亿级流量大纲摘要
   </a>
@@ -334,32 +360,6 @@
 <li>定义一个 RMI 接口</li>
 <li>编写 RMI 接口的实现类</li>
 <li>通过 JNDI 发布 RMI 服务</li></ul></div>
-    <!-- Post Tags -->
-    <div class="tags">
-      
-        <div class="untagged">Java</div>
-      
-    </div>
-  </div>
-</div>
-
-      
-        <div class="post-item-wrapper">
-  <a href="/2016/11/10/多线程之concurrent包/" class="post-title">
-      多线程之concurrent包
-  </a>
-  <div class="post-excerpt">
-    <!-- Post Date and Categories -->
-    <div class="date-and-category">
-      <div class="date">2016年11月10日</div>
-      <div class="categories">
-        
-          瞎编乱造
-        
-      </div>
-    </div>
-    <!-- Post Excerpt -->
-    <div class="excerpt typo"><h3 id="信号量（Semaphore）"><a href="#信号量（Semaphore）" class="headerlink" title="信号量（Semaphore）"></a>信号量（Semaphore）</h3><p>控制线程并发的数量。主要限制并发线程的数量，如果不限制并发线程的数量则CPU的资源会很快会被耗尽，每个线程执行的任务是相当缓慢，因为CPU要把时间片分配给不同的线程对象，而且上下文的切换也要耗时，最终导致系统运行效率降低，所以，控制并发线程的数量是必要的。<br></p></div>
     <!-- Post Tags -->
     <div class="tags">
       

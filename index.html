@@ -76,6 +76,39 @@
     <div class="col-lg-10 col-md-10 col-md-offset-1">
       
         <div class="post-item-wrapper">
+  <a href="/2018/12/28/JMS-AMQP/" class="post-title">
+      JMS&amp;AMQP
+  </a>
+  <div class="post-excerpt">
+    <!-- Post Date and Categories -->
+    <div class="date-and-category">
+      <div class="date">2018年12月28日</div>
+      <div class="categories">
+        
+          
+
+<a href="/categories/杂七杂八/">杂七杂八</a>
+
+        
+      </div>
+    </div>
+    <!-- Post Excerpt -->
+    <div class="excerpt typo"><p>从事IT工作的人对“协议”肯定都不陌生，最开始接触到的应该是HTTP协议，然后有TCP，IP协议等，HTTP中的P全称是Protocol就是协议的意思，协议是什么？协议是一种规范，是一种达成一致的一种规则，需要不同的计算机之间共同完成一件事情的时候就肯定会有协议的存在。就像人与人之间的合作一样，也是有这种规则，协议存在的，只是我们通常情况下不太关注而已。消息协议则是指用于实现消息队列功能时所涉及到的协议，按照是否想行业开放消息的规范文档，可以分为开放协议和私有协议，常见的开放协议有AMQP，MQTT，STOMP等，有些特殊框架如Redis，根据自身需要为严格遵循MQ规范，而是基于TCP/IP自行封装了一套协议，实现了MQ的功能。<br></p></div>
+    <!-- Post Tags -->
+    <div class="tags">
+      
+        
+
+<a class="tag" href="/tags/消息队列/">消息队列</a> <a class="tag" href="/tags/JMS/">JMS</a> <a class="tag" href="/tags/AMQP/">AMQP</a> <a class="tag" href="/tags/消息协议/">消息协议</a>
+
+
+      
+    </div>
+  </div>
+</div>
+
+      
+        <div class="post-item-wrapper">
   <a href="/2018/12/23/数据结构之字典树/" class="post-title">
       数据结构之字典树
   </a>
@@ -345,32 +378,6 @@
     </div>
     <!-- Post Excerpt -->
     <div class="excerpt typo">暂无文章摘要</div>
-    <!-- Post Tags -->
-    <div class="tags">
-      
-        <div class="untagged">Java</div>
-      
-    </div>
-  </div>
-</div>
-
-      
-        <div class="post-item-wrapper">
-  <a href="/2017/08/30/Curator之LeaderLatch使用/" class="post-title">
-      Curator之LeaderLatch使用
-  </a>
-  <div class="post-excerpt">
-    <!-- Post Date and Categories -->
-    <div class="date-and-category">
-      <div class="date">2017年8月30日</div>
-      <div class="categories">
-        
-          瞎编乱造
-        
-      </div>
-    </div>
-    <!-- Post Excerpt -->
-    <div class="excerpt typo"><h3 id="背景简介"><a href="#背景简介" class="headerlink" title="背景简介"></a>背景简介</h3><p>Zookeeper在分布式系统中，常常被用于选主。在执行某个任务时，让所有的节点都知道有一个特别的，唯一的节点是任务的主节点，由主节点进行任务的执行，其他节点作为备用节点。通过这种热备方式，为分布式系统中任务执行的可控性，以及系统高可用性。<br>作为zookeeper的高级api封装库curator选主算法主要有以下两个：Leader Latch和Leader Election今天简单的介绍一下Leader Latch。<br>LeaderLatch的方式，就是以一种抢占的方式来决定选主。比较简单粗暴，逻辑相对简单。类似非公平锁的抢占，所以，多节点是一个随机产生主节点的过程。基本就是，谁抢到就算谁的。<br>多个参与者（如：逻辑节点；某个线程等），指定在一个分组之下，每个分组内进行主节点抢占。<br></p></div>
     <!-- Post Tags -->
     <div class="tags">
       
